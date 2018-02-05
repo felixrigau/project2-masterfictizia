@@ -2,4 +2,8 @@
 .sass-cache/
 *.css.map
 
-# End of https://www.gitignore.io/api/sass
+### Config ###
+.config/
+
+### gitIgnore ###
+.gitIgnore
