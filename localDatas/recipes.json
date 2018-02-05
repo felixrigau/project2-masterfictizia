@@ -3,14 +3,6 @@
   "from" : 0,
   "to" : 30,
   "params" : {
-    "sane" : [ ],
-    "q" : [ "chicken" ],
-    "app_key" : [ "152a1dbf4fb0e7e1fbb82350e82c492e" ],
-    "health" : [ "alcohol-free" ],
-    "from" : [ "0" ],
-    "to" : [ "30" ],
-    "calories" : [ "591-722" ],
-    "app_id" : [ "3c5f6164" ]
   },
   "more" : true,
   "count" : 14999,
