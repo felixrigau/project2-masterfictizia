@@ -3,7 +3,7 @@
 *.css.map
 
 ### Config ###
-.config/
+config/
 
 ### gitIgnore ###
 .gitIgnore
