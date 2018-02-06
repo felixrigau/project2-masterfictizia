@@ -3,6 +3,7 @@
 var myApp = myApp || {};
 
 myApp.security = {
+    
     loginGithub: function() {
         firebase.auth().signInWithPopup(provider).then(function(result) {
             var uid = result.user.uid;
