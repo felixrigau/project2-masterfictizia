@@ -7,6 +7,7 @@ myApp.tools = {
     makeAjaxRequest: function (httpMethod, url, asynchronous, callback) {
         var request = new XMLHttpRequest();
         request.open(httpMethod,url, asynchronous);
+        
         request.onreadystatechange = function () {
             if (request.readyState === 4 && request.status === 200 && request.responseText ) {
                 var json = JSON.parse(request.responseText);
@@ -17,5 +18,14 @@ myApp.tools = {
             }
         };
         request.send(null);
+    },
+    
+    createUrl: function (queryParams) {
+        var url = 'https://api.edamam.com/search?';
+        
+        for (var key in queryParams) {
+            url += key + '=' + queryParams[key] + '&';
+        }
+        return url.slice(0,url.length-1)
     }
 }
