@@ -13,9 +13,9 @@ var queryParams = {
     to: null
 }
 
-myApp.userManagement = {
+myApp.sessionStorage = {
     storageUser: function (user) {
-        if(!myApp.userManagement.getUser(user)){
+        if(!myApp.sessionStorage.getUser(user)){
             sessionStorage.setItem('user', user);
         }
     },
@@ -27,6 +27,24 @@ myApp.userManagement = {
     getUser: function (user) {
         return sessionStorage.getItem('user')
     }
+    
+}
+
+myApp.userManagement = {
+    
+    save: function (user) {
+        if(!myApp.userManagement.alreadyExist(user.uid)){
+            database.ref('/users/'+user.uid).set(user);
+        }
+    },
+    
+    alreadyExist:function (userId) {
+        database.ref('/users/'+userId).once('value').then(function (snapshot) {
+            var exist =  (snapshot.val() && snapshot.val().username) || false;
+            return exist;
+        });
+    }
+    
 }
 
 myApp.recipeManagement = {
