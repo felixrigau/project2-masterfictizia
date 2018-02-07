@@ -34,13 +34,13 @@ myApp.userManagement = {
     
     save: function (user) {
         if(!myApp.userManagement.alreadyExist(user.uid)){
-            database.ref('/users/'+user.uid).set(user);
+            database.ref('/users/'+user.uid).set(myApp.tools.purifyObject(user));
         }
     },
     
     alreadyExist:function (userId) {
         database.ref('/users/'+userId).once('value').then(function (snapshot) {
-            var exist =  (snapshot.val() && snapshot.val().username) || false;
+            var exist =  (snapshot.val() && snapshot.val().uid) || false;
             return exist;
         });
     }
