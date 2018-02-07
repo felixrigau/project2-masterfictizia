@@ -13,6 +13,22 @@ var queryParams = {
     to: null
 }
 
+myApp.userManagement = {
+    storageUser: function (user) {
+        if(!myApp.userManagement.getUser(user)){
+            sessionStorage.setItem('user', user);
+        }
+    },
+    
+    removeUser: function (user) {
+        sessionStorage.removeItem('user');
+    },
+    
+    getUser: function (user) {
+        return sessionStorage.getItem('user')
+    }
+}
+
 myApp.recipeManagement = {
     saveRecipe: function (data){
         if (data && data[0]) {
