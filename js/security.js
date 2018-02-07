@@ -1,4 +1,6 @@
 /*global firebase*/
+/*global provider*/
+/*global auth*/
 
 var myApp = myApp || {};
 
@@ -14,11 +16,19 @@ myApp.security = {
     },
     
     logoutGithub: function() {
-        console.log('aki')
         firebase.auth().signOut().then(function() {
-            console.log("Pa fuera!")
+            console.log("User logout!")
         }).catch(function(error) {
             console.log(error)
         });
     }
 }
+
+auth.onAuthStateChanged(function(user) {
+    if (user) {
+      document.querySelector('body').style.backgroundColor = '#0F0';
+      var uid = user.uid;
+    } else {
+      document.querySelector('body').style.backgroundColor = '#F00';
+    }
+})
