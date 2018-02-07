@@ -33,8 +33,14 @@ myApp.tools = {
     
     getRightUri: function (uri) {
         if(uri.indexOf('#') !== -1){
-            uri = uri.replace('#', '23%');
+            uri = uri.replace('#', '%23');
         }
         return uri;
+    },
+    
+    extractRecipesIdFromUri: function (uri) {
+        if(uri.indexOf('#') !== -1){
+            return uri.match(/#([^#]*)"/)[1];
+        }
     }
 }
