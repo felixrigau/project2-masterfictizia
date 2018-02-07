@@ -24,8 +24,17 @@ myApp.tools = {
         var url = 'https://api.edamam.com/search?';
         
         for (var key in queryParams) {
-            url += key + '=' + queryParams[key] + '&';
+            if(queryParams[key]){
+                url += key + '=' + queryParams[key] + '&';
+            }
         }
         return url.slice(0,url.length-1)
+    },
+    
+    getRightUri: function (uri) {
+        if(uri.indexOf('#') !== -1){
+            uri = uri.replace('#', '23%');
+        }
+        return uri;
     }
 }
