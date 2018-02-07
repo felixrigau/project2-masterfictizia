@@ -4,9 +4,9 @@ var myApp = myApp || {};
 
 myApp.tools = {
     
-    makeAjaxRequest: function (httpMethod, url, asynchronous, callback) {
+    makeAjaxRequest: function (httpMethod, url, callback) {
         var request = new XMLHttpRequest();
-        request.open(httpMethod,url, asynchronous);
+        request.open(httpMethod,url, true);
         
         request.onreadystatechange = function () {
             if (request.readyState === 4 && request.status === 200 && request.responseText ) {
@@ -40,7 +40,7 @@ myApp.tools = {
     
     extractRecipesIdFromUri: function (uri) {
         if(uri.indexOf('#') !== -1){
-            return uri.match(/#([^#]*)"/)[1];
+            return uri.match(/#([^#]*.)/)[1];
         }
     }
 }
