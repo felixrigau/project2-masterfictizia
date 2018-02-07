@@ -20,6 +20,11 @@ myApp.tools = {
         request.send(null);
     },
     
+    purifyObject: function (obj) {
+        obj = JSON.stringify(obj);
+        return JSON.parse(obj);
+    },
+    
     createUrl: function (queryParams) {
         var url = 'https://api.edamam.com/search?';
         
