@@ -9,9 +9,7 @@ myApp.security = {
     
     loginGithub: function() {
         firebase.auth().signInWithPopup(gitHubProvider).then(function(result) {
-            var uid = result.user.uid;
             myApp.userManagement.save(result.user);
-            console.log(uid)
         }).catch(function(error) {
             console.log(error)
         });
@@ -19,7 +17,7 @@ myApp.security = {
     
     loginGoogle: function() {
         firebase.auth().signInWithPopup(googleProvider).then(function(result) {
-            console.log(result.user)
+            myApp.userManagement.save(result.user);
         }).catch(function(error) {
             console.log(error)
         });
