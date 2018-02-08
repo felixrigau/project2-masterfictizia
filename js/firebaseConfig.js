@@ -13,4 +13,5 @@ firebase.initializeApp(config);
 
 var database = firebase.database();
 var auth = firebase.auth();
-var provider = new firebase.auth.GithubAuthProvider();
+var gitHubProvider = new firebase.auth.GithubAuthProvider();
+var googleProvider = new firebase.auth.GoogleAuthProvider();

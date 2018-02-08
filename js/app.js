@@ -73,6 +73,10 @@ myApp.UI = {
     eventsListener: function () {
         document.querySelector('.loginGithub').addEventListener('click',function () {
             myApp.security.loginGithub();
+        }); 
+        
+        document.querySelector('.loginGoogle').addEventListener('click',function () {
+            myApp.security.loginGoogle();
         });
 
         document.querySelector('.logoutGithub').addEventListener('click',function () {
@@ -107,3 +111,8 @@ myApp.start();
 
 // var url = `https://api.edamam.com/search?`;
 // var url = '../localDatas/recipes.json';
+
+//TODO
+/*
+Crear objeto con relación muchos a muchos entre usuario y receta
+*/

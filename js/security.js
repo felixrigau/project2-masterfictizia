@@ -1,5 +1,6 @@
 /*global firebase*/
-/*global provider*/
+/*global gitHubProvider*/
+/*global googleProvider*/
 /*global auth*/
 
 var myApp = myApp || {};
@@ -7,10 +8,18 @@ var myApp = myApp || {};
 myApp.security = {
     
     loginGithub: function() {
-        firebase.auth().signInWithPopup(provider).then(function(result) {
+        firebase.auth().signInWithPopup(gitHubProvider).then(function(result) {
             var uid = result.user.uid;
             myApp.userManagement.save(result.user);
             console.log(uid)
+        }).catch(function(error) {
+            console.log(error)
+        });
+    },
+    
+    loginGoogle: function() {
+        firebase.auth().signInWithPopup(googleProvider).then(function(result) {
+            console.log(result.user)
         }).catch(function(error) {
             console.log(error)
         });
