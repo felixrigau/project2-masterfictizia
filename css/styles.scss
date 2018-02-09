@@ -1,3 +1,30 @@
-.general-container{
+$pink: #f50057;
+$pink-grey: #fce4ec;
 
+
+div.general-container {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.image-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    span {
+        position: absolute;
+        
+        &.background {
+            color: rgba($pink-grey,0.6);
+            font-size: 29px;
+        }
+        
+        &.border {
+            color: $pink;
+            font-size: 32px;
+        }
+    }
 }
