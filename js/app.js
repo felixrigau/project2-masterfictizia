@@ -4,7 +4,7 @@
 var myApp = myApp || {};
 
 
-var queryParams = {
+myApp.queryParams = {
     app_id: myApp.config.appId,
     app_key: myApp.config.appKey,
     q: null,
@@ -25,33 +25,63 @@ myApp.sessionStorage = {
     },
     
     getUser: function (user) {
-        return sessionStorage.getItem('user')
+        return sessionStorage.getItem('user');
     }
     
 }
 
 myApp.userManagement = {
     
-    save: function (user) {
-        if(!myApp.userManagement.alreadyExist(user.uid)){
+    saveUser: function (user) {
+        if(!myApp.userManagement.userAlreadyExist(user.uid)){
             database.ref('/users/'+user.uid).set(myApp.tools.purifyObject(user));
         }
     },
     
-    alreadyExist:function (userId) {
-        database.ref('/users/'+userId).once('value').then(function (snapshot) {
-            var exist =  (snapshot.val() && snapshot.val().uid) || false;
-            return exist;
+    userAlreadyExist:function (userId) {
+        var promise = new Promise(function (resolve, reject) {
+            database.ref('/users/'+userId).once('value').then(function (snapshot) {
+                resolve ((snapshot.val() && snapshot.val().uid) || false);
+            });
+        });
+        return promise;
+    },
+    
+    relationWithRecipe: function (userId, recipeId) {
+        database.ref('/users-recipes/'+(new Date())).set({
+            userId: userId,
+            recipeId: recipeId
         });
     }
     
 }
 
 myApp.recipeManagement = {
-    saveRecipe: function (data){
-        if (data && data[0]) {
-            var id = myApp.tools.extractRecipesIdFromUri(data[0].uri);
-            database.ref('/recipes/'+id).set(data[0]);
+    saveRecipe: function (recipe){
+        if(!myApp.recipeManagement.recipeAlreadyExist(recipe.id)) {
+            database.ref('/recipes/'+recipe.id).set(recipe);
+        }
+    },
+    
+    recipeAlreadyExist:function (recipeId) {
+        var promise = new Promise(function (resolve, reject) {
+            database.ref('/users/'+recipeId).once('value').then(function (snapshot) {
+                var exist =  (snapshot.val() && snapshot.val().uid) || false;
+                resolve(exist);
+            });
+        });
+        return promise;
+    },
+    
+    saveRecipeFromAPI: function (json) {
+        if (json[0] && json[0].uri) {
+            var recipe = json[0];
+            var recipeData = myApp.tools.getRightUriAndId(recipe.uri)
+            recipe.uri = recipeData.uri;
+            recipe.id = recipeData.id;
+            myApp.recipeManagement.saveRecipe(recipe);
+        } else {
+            console.log('La receta no existe.');
         }
     }
     
@@ -66,11 +96,50 @@ myApp.UI = {
             
         for(var i = 0; i < recipes.length; i++){
             recipe = recipes[i].recipe;
-            container.innerHTML += `<img data-recipeid="${recipe.uri}" src="${recipe.image}">`;
+            container.innerHTML += 
+            `<div class="image-container" data-recipeid="${recipe.uri}">
+                <span class="background">
+                    <i class="fas fa-heart"></i>
+                </span>
+                <span class="border">
+                    <i class="far fa-heart"></i>
+                </span>
+                <img src="${recipe.image}"></img>
+            <div>`;
         }
     },
     
     eventsListener: function () {
+         document.querySelector('.general-container').addEventListener('click',function (e) {
+            if (e.target.nodeName === 'I') {
+                var userId = myApp.sessionStorage.getUser('user');
+                
+                if (userId) {
+                    var recipeContainerTag = e.path[2],
+                        recipeData = myApp.tools.getRightUriAndId(recipeContainerTag.getAttribute('data-recipeid'));
+                        
+                    myApp.queryParams.r = recipeData.uri;
+                    
+                    myApp.recipeManagement.recipeAlreadyExist(recipeData.id).then(
+                        function (exist) {
+                            if (!exist) {
+                                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI);
+                            }
+                        }
+                    ).catch(
+                        function (reason) {
+                            console.log('The promise has been rejected. Reason: ', reason)
+                        }
+                    );
+                    
+                    myApp.userManagement.relationWithRecipe(userId,recipeData.id);
+                } else {
+                    //Action para que el usuario se loguee
+                }
+                
+            }
+        });
+        
         document.querySelector('.loginGithub').addEventListener('click',function () {
             myApp.security.loginGithub();
         }); 
@@ -85,22 +154,12 @@ myApp.UI = {
         
         document.querySelector('.search').addEventListener('keyup',function (e) {
             if (e.keyCode === 13) {
-                queryParams.q = this.value;
-                // myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(queryParams), myApp.UI.showRecipes);
+                myApp.queryParams.q = this.value;
+                // myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
                 myApp.tools.makeAjaxRequest('GET','../localDatas/recipes.json', myApp.UI.showRecipes);
             }
         });
-        
-        document.querySelector('.general-container').addEventListener('click',function (e) {
-            var id = null;
-            
-            if (e.target.nodeName === 'IMG') {
-                id = e.target.getAttribute('data-recipeid');
-                queryParams.q = null;
-                queryParams.r = myApp.tools.getRightUri(id);
-                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(queryParams), myApp.recipeManagement.saveRecipe);
-            }
-        });
+
     }
 }
 
@@ -114,5 +173,5 @@ myApp.start();
 
 //TODO
 /*
-Crear objeto con relación muchos a muchos entre usuario y receta
+Refactorizar lógica de inserción de recetas
 */

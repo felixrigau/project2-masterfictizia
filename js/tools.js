@@ -36,16 +36,14 @@ myApp.tools = {
         return url.slice(0,url.length-1)
     },
     
-    getRightUri: function (uri) {
+    getRightUriAndId: function (uri) {
         if(uri.indexOf('#') !== -1){
-            uri = uri.replace('#', '%23');
+            var object = {
+                id: uri.match(/#([^#]*.)/)[1],
+                uri: uri.replace('#', '%23')
+            } 
         }
-        return uri;
-    },
-    
-    extractRecipesIdFromUri: function (uri) {
-        if(uri.indexOf('#') !== -1){
-            return uri.match(/#([^#]*.)/)[1];
-        }
+        return object;
     }
+
 }

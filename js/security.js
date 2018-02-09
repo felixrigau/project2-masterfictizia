@@ -9,7 +9,7 @@ myApp.security = {
     
     loginGithub: function() {
         firebase.auth().signInWithPopup(gitHubProvider).then(function(result) {
-            myApp.userManagement.save(result.user);
+            myApp.userManagement.saveUser(result.user);
         }).catch(function(error) {
             console.log(error)
         });
@@ -17,7 +17,7 @@ myApp.security = {
     
     loginGoogle: function() {
         firebase.auth().signInWithPopup(googleProvider).then(function(result) {
-            myApp.userManagement.save(result.user);
+            myApp.userManagement.saveUser(result.user);
         }).catch(function(error) {
             console.log(error)
         });
@@ -34,10 +34,10 @@ myApp.security = {
 
 auth.onAuthStateChanged(function(user) {
     if (user) {
-      document.querySelector('body').style.backgroundColor = '#0F0';
+      document.querySelector('body').style.backgroundColor = '#b2ff59';
       myApp.sessionStorage.storageUser(user.uid);
     } else {
-      document.querySelector('body').style.backgroundColor = '#F00';
+      document.querySelector('body').style.backgroundColor = '#4dd0e1';
       myApp.sessionStorage.removeUser('user');
     }
 })
