@@ -1,4 +1,4 @@
-div.general-container {
+.general-container {
   display: flex;
   flex-wrap: wrap;
   width: 100%; }
@@ -9,12 +9,11 @@ div.general-container {
   justify-content: center;
   align-items: center; }
   .image-container span {
-    position: absolute; }
-    .image-container span.background {
-      color: rgba(252, 228, 236, 0.6);
-      font-size: 29px; }
-    .image-container span.border {
-      color: #f50057;
-      font-size: 32px; }
+    position: absolute;
+    font-size: 32px;
+    color: #cfd8dc; }
+  .image-container .favorite {
+    color: #f50057; }
+    
 
 /*# sourceMappingURL=styles.css.map */

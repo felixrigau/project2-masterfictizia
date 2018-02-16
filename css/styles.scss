@@ -1,5 +1,5 @@
 $pink: #f50057;
-$pink-grey: #fce4ec;
+$grey: #cfd8dc;
 
 
 div.general-container {
@@ -16,15 +16,11 @@ div.general-container {
     
     span {
         position: absolute;
-        
-        &.background {
-            color: rgba($pink-grey,0.6);
-            font-size: 29px;
-        }
-        
-        &.border {
-            color: $pink;
-            font-size: 32px;
-        }
+        font-size: 32px;
+        color: $grey;
+    }
+    
+    .favorite {
+        color: $pink;
     }
 }
