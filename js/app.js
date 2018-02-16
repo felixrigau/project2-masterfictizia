@@ -48,26 +48,47 @@ myApp.userManagement = {
     },
     
     relationWithRecipe: function (userId, recipeId) {
-        database.ref('/users-recipes/'+(new Date())).set({
+        database.ref('/users-recipes/'+ userId+'_'+recipeId).set({
             userId: userId,
             recipeId: recipeId
         });
+    },
+    
+    removeRelationWithRecipe: function (userId, recipeId) {
+        database.ref('/users-recipes/'+userId+'_'+recipeId).remove();
     }
     
 }
 
 myApp.recipeManagement = {
-    saveRecipe: function (recipe){
-        if(!myApp.recipeManagement.recipeAlreadyExist(recipe.id)) {
+    saveRecipe: function (recipe, verify){
+        if (verify) {
+            myApp.recipeManagement.recipeAlreadyExist(recipe.id).then(
+                function (exist) {
+                    if (exist) {
+                        console.log('La receta ya existe en la base de datos.')
+                    } else {
+                        database.ref('/recipes/'+recipe.id).set(recipe);
+                    }
+                }
+            ).catch(
+                function (reason) {
+                    console.log('The promise has been rejected. Reason: ', reason)
+                }
+            );
+        } else {
             database.ref('/recipes/'+recipe.id).set(recipe);
         }
     },
     
     recipeAlreadyExist:function (recipeId) {
         var promise = new Promise(function (resolve, reject) {
-            database.ref('/users/'+recipeId).once('value').then(function (snapshot) {
-                var exist =  (snapshot.val() && snapshot.val().uid) || false;
-                resolve(exist);
+            database.ref('/recipes/'+recipeId).once('value').then(function (snapshot) {
+                if (snapshot.val()) {
+                    resolve(snapshot.val());
+                } else {
+                    resolve(false);
+                }
             });
         });
         return promise;
@@ -79,7 +100,7 @@ myApp.recipeManagement = {
             var recipeData = myApp.tools.getRightUriAndId(recipe.uri)
             recipe.uri = recipeData.uri;
             recipe.id = recipeData.id;
-            myApp.recipeManagement.saveRecipe(recipe);
+            myApp.recipeManagement.saveRecipe(recipe, false);
         } else {
             console.log('La receta no existe.');
         }
@@ -98,11 +119,8 @@ myApp.UI = {
             recipe = recipes[i].recipe;
             container.innerHTML += 
             `<div class="image-container" data-recipeid="${recipe.uri}">
-                <span class="background">
+                <span>
                     <i class="fas fa-heart"></i>
-                </span>
-                <span class="border">
-                    <i class="far fa-heart"></i>
                 </span>
                 <img src="${recipe.image}"></img>
             <div>`;
@@ -117,24 +135,31 @@ myApp.UI = {
                 if (userId) {
                     var recipeContainerTag = e.path[2],
                         recipeData = myApp.tools.getRightUriAndId(recipeContainerTag.getAttribute('data-recipeid'));
+                    
+                    if (!e.target.parentNode.classList.contains('favorite')) {
                         
-                    myApp.queryParams.r = recipeData.uri;
-                    
-                    myApp.recipeManagement.recipeAlreadyExist(recipeData.id).then(
-                        function (exist) {
-                            if (!exist) {
-                                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI);
+                        myApp.queryParams.r = recipeData.uri;
+                        
+                        myApp.recipeManagement.recipeAlreadyExist(recipeData.id).then(
+                            function (exist) {
+                                if (exist === false) {
+                                    myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI);
+                                }
+                                myApp.userManagement.relationWithRecipe(userId,recipeData.id);  
+                                e.target.parentNode.classList.add('favorite');
                             }
-                        }
-                    ).catch(
-                        function (reason) {
-                            console.log('The promise has been rejected. Reason: ', reason)
-                        }
-                    );
+                        ).catch(
+                            function (reason) {
+                                console.log('The promise has been rejected. Reason: ', reason)
+                            }
+                        );
+                    } else {
+                        myApp.userManagement.removeRelationWithRecipe(userId,recipeData.id);
+                        e.target.parentNode.classList.remove('favorite');
+                    }
                     
-                    myApp.userManagement.relationWithRecipe(userId,recipeData.id);
                 } else {
-                    //Action para que el usuario se loguee
+                    console.log('Debe loguearse para realizar esta operación');
                 }
                 
             }
@@ -174,4 +199,5 @@ myApp.start();
 //TODO
 /*
 Refactorizar lógica de inserción de recetas
+Documentar con JSDoc
 */
