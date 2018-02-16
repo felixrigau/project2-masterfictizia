@@ -44,6 +44,14 @@ myApp.tools = {
             } 
         }
         return object;
+    },
+    
+    cleanQueryParams: function (){
+        for (var prop in myApp.queryParams) {
+            if (prop !== 'app_id' && prop !== 'app_key') {
+                myApp.queryParams[prop] = null;
+            }
+        }
     }
 
 }
