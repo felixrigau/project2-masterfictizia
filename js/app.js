@@ -111,6 +111,7 @@ myApp.recipe = {
                 }
                 else {
                     properties.callback(recipe);
+                    recipe.favoriteCounter = 0;
                 }
                 myApp.recipe.management.saveRecipe(recipe, false);
             }
@@ -198,7 +199,7 @@ myApp.recipe = {
                             myApp.recipe.ui.showRecipe(recipe)
                         }
                         else {
-                            myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI,{action:'view', callback:'myApp.recipe.ui.showRecipe'});
+                            myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI, {action:'view', callback:myApp.recipe.ui.showRecipe});
                         }
                     }
                 ).catch(
