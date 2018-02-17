@@ -54,7 +54,13 @@ myApp.userManagement = {
         });
     },
     
-    removeRelationWithRecipe: function (userId, recipeId) {
+    recipesFavoriteByUser: function (userId) {
+        database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value',function (snapshot) {
+            console.log(snapshot.val());
+        })
+    },
+    
+    removeRelationBetweenUserAndrecipe: function (userId, recipeId) {
         database.ref('/users-recipes/'+userId+'_'+recipeId).remove();
     }
     
