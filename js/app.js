@@ -126,8 +126,8 @@ myApp.recipeManagement = {
         }
     },
     
-    recipeMoreFavorites: function() {
-        database.ref('/recipes/').orderByChild('favoriteCounter').limitToLast(2).once('value',function (snapshot) {
+    recipeMoreFavorites: function(amount) {
+        database.ref('/recipes/').orderByChild('favoriteCounter').limitToLast(amount).once('value',function (snapshot) {
             console.log(snapshot.val())
         });
     }
