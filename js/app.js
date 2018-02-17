@@ -124,6 +124,12 @@ myApp.recipeManagement = {
         else {
             console.log('La receta no existe.');
         }
+    },
+    
+    recipeMoreFavorites: function() {
+        database.ref('/recipes/').orderByChild('favoriteCounter').limitToLast(2).once('value',function (snapshot) {
+            console.log(snapshot.val())
+        });
     }
 
 }
