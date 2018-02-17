@@ -55,7 +55,7 @@ myApp.tools = {
     },
     
     isFavorite: function(favoriteRecipes, recipeId ) {
-        if(favoriteRecipes.indexOf(recipeId) !== -1) {
+        if(favoriteRecipes.length !== 0 && favoriteRecipes.indexOf(recipeId) !== -1) {
             return "class='js-favorite'";
         }
     }

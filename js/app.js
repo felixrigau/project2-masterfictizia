@@ -33,18 +33,19 @@ myApp.sessionStorage = {
 myApp.userManagement = {
 
     saveUser: function(user) {
-        if (!myApp.userManagement.userAlreadyExist(user.uid)) {
-            database.ref('/users/' + user.uid).set(myApp.tools.purifyObject(user));
-        }
+        myApp.userManagement.userAlreadyExist(user.uid).then(function (exist) {
+            if(exist === false) {
+                database.ref('/users/' + user.uid).set(myApp.tools.purifyObject(user));
+            } 
+        });
     },
 
     userAlreadyExist: function(userId) {
-        var promise = new Promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             database.ref('/users/' + userId).once('value').then(function(snapshot) {
                 snapshot.val() ? resolve(snapshot.val()) : resolve(false);
             });
         });
-        return promise;
     },
 
     relationWithRecipe: function(userId, recipeId) {
@@ -57,13 +58,13 @@ myApp.userManagement = {
     favoriteRecipes: function(userId) {
         return new Promise(function(resolve,reject) {
             database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
-                var favoritesRecipe = [];
+                var favoriteRecipes = [];
                 if(snapshot.val()) {
                     snapshot.forEach(function (element) {
-                        favoritesRecipe.push(element.val().recipeId)
+                        favoriteRecipes.push(element.val().recipeId)
                     });
-                    resolve(favoritesRecipe);
                 }
+                resolve(favoriteRecipes);
             })
         });
     },
@@ -98,12 +99,11 @@ myApp.recipeManagement = {
     },
 
     recipeAlreadyExist: function(recipeId) {
-        var promise = new Promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
             database.ref('/recipes/' + recipeId).once('value').then(function(snapshot) {
                 snapshot.val() ? resolve(snapshot.val()) : resolve(false);
             });
         });
-        return promise;
     },
 
     saveRecipeFromAPI: function(json) {
@@ -169,7 +169,7 @@ myApp.UI = {
                     var recipeContainerTag = e.path[2],
                         recipeData = myApp.tools.getRightUriAndId(recipeContainerTag.getAttribute('data-recipeid'));
 
-                    if (!e.target.parentNode.classList.contains('favorite')) {
+                    if (!e.target.parentNode.classList.contains('js-favorite')) {
 
                         myApp.queryParams.r = recipeData.uri;
 
@@ -179,7 +179,7 @@ myApp.UI = {
                                     myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI);
                                 }
                                 myApp.userManagement.relationWithRecipe(userId, recipeData.id);
-                                e.target.parentNode.classList.add('favorite');
+                                e.target.parentNode.classList.add('js-favorite');
                             }
                         ).catch(
                             function(reason) {
@@ -188,8 +188,8 @@ myApp.UI = {
                         );
                     }
                     else {
-                        myApp.userManagement.removeRelationWithRecipe(userId, recipeData.id);
-                        e.target.parentNode.classList.remove('favorite');
+                        myApp.userManagement.removeRelationBetweenUserAndrecipe(userId, recipeData.id);
+                        e.target.parentNode.classList.remove('js-favorite');
                     }
 
                 }
