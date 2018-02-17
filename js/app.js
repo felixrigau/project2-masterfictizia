@@ -109,6 +109,9 @@ myApp.recipe = {
                 if(properties.action === 'favorite') {
                     recipe.favoriteCounter = 1;
                 }
+                else {
+                    properties.callback(recipe);
+                }
                 myApp.recipe.management.saveRecipe(recipe, false);
             }
             else {
@@ -145,6 +148,64 @@ myApp.recipe = {
     },
     
     ui: {
+        favoriteAction:function(event) {
+            var userId = myApp.sessionStorage.getUser('user');
+            if (userId) {
+                var actionsContainerTag = event.path[2],
+                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
+                    recipeId = recipeData.id,
+                    spanTag = event.target.parentNode;
+                    myApp.queryParams.r = recipeData.uri;
+
+                myApp.recipe.management.recipeAlreadyExist(recipeId).then(
+                    function(recipe) {
+                        var parameters = {recipeId: recipeId, spanTag: spanTag, userId: userId, recipe: recipe};
+                        if(recipe) {
+                            if(!myApp.UI.containsClass(spanTag, 'js-favorite')) {   
+                                myApp.recipe.ui.markAsfavorite(parameters);
+                            }
+                            else {
+                                myApp.recipe.ui.unmarkAsfavorite(parameters);
+                            }
+                        }
+                        else {
+                            myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI,{action:'favorite'});
+                            myApp.recipe.ui.markAsfavorite(parameters);
+                        }
+                    }
+                ).catch(
+                    function(reason) {
+                        console.log('The promise has been rejected. Reason: ', reason);
+                    }
+                );
+            }
+            else {
+                console.log('Debe loguearse para realizar esta operación');
+            }
+        },
+        
+        viewAction:function(event) {
+            var actionsContainerTag = event.path[2],
+                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
+                    recipeId = recipeData.id;
+                    myApp.queryParams.r = recipeData.uri;
+
+                myApp.recipe.management.recipeAlreadyExist(recipeId).then(
+                    function(recipe) {
+                        if(recipe) {
+                            myApp.recipe.ui.showRecipe(recipe)
+                        }
+                        else {
+                            myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI,{action:'view', callback:'myApp.recipe.ui.showRecipe'});
+                        }
+                    }
+                ).catch(
+                    function(reason) {
+                        console.log('The promise has been rejected. Reason: ', reason);
+                    }
+                );
+        },
+        
         markAsfavorite:function(obj) {
             if(obj.recipe) {
                 myApp.recipe.management.increaseFavoriteCounter(obj.recipe);
@@ -160,6 +221,10 @@ myApp.recipe = {
             myApp.recipe.management.removeRelationWithUser(obj.userId, obj.recipeId);
             myApp.UI.removeClass(obj.spanTag, 'js-favorite');
         },
+        
+        showRecipe:function(recipe) {
+            console.log("Veo la receta",recipe);
+        }
     }
 }
 
@@ -217,41 +282,12 @@ myApp.UI = {
     eventsListener: function() {
         document.querySelector('.general-container').addEventListener('click', function(e) {
             if (e.target.nodeName === 'I') {
-                var userId = myApp.sessionStorage.getUser('user');
-
-                if (userId) {
-                    var actionsContainerTag = e.path[2],
-                        recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
-                        recipeId = recipeData.id,
-                        spanTag = e.target.parentNode;
-                        myApp.queryParams.r = recipeData.uri;
-
-                    myApp.recipe.management.recipeAlreadyExist(recipeId).then(
-                        function(recipe) {
-                            var parameters = {recipeId: recipeId, spanTag: spanTag, userId: userId, recipe: recipe}
-                            if(recipe) {
-                                if(!myApp.UI.containsClass(spanTag, 'js-favorite')) {   
-                                    myApp.recipe.ui.markAsfavorite(parameters);
-                                }
-                                else {
-                                    myApp.recipe.ui.unmarkAsfavorite(parameters);
-                                }
-                            }
-                            else {
-                                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI,{action:'favorite'});
-                                myApp.recipe.ui.markAsfavorite(parameters);
-                            }
-                        }
-                    ).catch(
-                        function(reason) {
-                            console.log('The promise has been rejected. Reason: ', reason);
-                        }
-                    );
-                }
+                if(e.target.parentNode.getAttribute('data-action') === 'view') {
+                    myApp.recipe.ui.viewAction(e);
+                } 
                 else {
-                    console.log('Debe loguearse para realizar esta operación');
+                    myApp.recipe.ui.favoriteAction(e);
                 }
-
             }
         });
 
