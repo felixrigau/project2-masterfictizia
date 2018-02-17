@@ -144,33 +144,31 @@ myApp.UI = {
             
         if(myApp.sessionStorage.getUser('user')) {
             myApp.userManagement.favoriteRecipes(myApp.sessionStorage.getUser('user')).then(function(favoriteRecipes) {
-                
                 for (var i = 0; i < recipes.length; i++) {
-                    recipe = recipes[i].recipe;
-                    recipeData = myApp.tools.getRightUriAndId(recipe.uri);
-                    container.innerHTML +=
-                        `<div class="image-container" data-recipeid="${recipe.uri}">
-                        <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id) }>
-                            <i class="fas fa-heart"></i>
-                        </span>
-                        <img src="${recipe.image}"></img>
-                    <div>`;
+                    myApp.UI.recipeComponent(recipes[i].recipe, container, favoriteRecipes);
                 }
             });
         }
         else {
             for (var i = 0; i < recipes.length; i++) {
-                recipe = recipes[i].recipe;
-                container.innerHTML +=
-                    `<div class="image-container" data-recipeid="${recipe.uri}">
-                    <span>
-                        <i class="fas fa-heart"></i>
-                    </span>
-                    <img src="${recipe.image}"></img>
-                <div>`;
+                myApp.UI.recipeComponent(recipes[i].recipe, container);
             }
         }
 
+    },
+    
+    recipeComponent:function (recipe, container, favoriteRecipes) {
+        var recipeData = myApp.tools.getRightUriAndId(recipe.uri);
+        container.innerHTML +=
+            `<div class="image-container" data-recipeid="${recipe.uri}">
+            <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id) }>
+                <i class="fas fa-heart"></i>
+            </span>
+            <span>
+                <i class="fas fa-eye"></i>
+            </span>
+            <img src="${recipe.image}"></img>
+        <div>`;
     },
 
     eventsListener: function() {
