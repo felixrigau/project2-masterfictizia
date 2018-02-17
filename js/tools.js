@@ -52,6 +52,11 @@ myApp.tools = {
                 myApp.queryParams[prop] = null;
             }
         }
+    },
+    
+    isFavorite: function(favoriteRecipes, recipeId ) {
+        if(favoriteRecipes.indexOf(recipeId) !== -1) {
+            return "class='js-favorite'";
+        }
     }
-
 }

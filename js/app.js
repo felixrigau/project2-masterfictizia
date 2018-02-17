@@ -54,10 +54,18 @@ myApp.userManagement = {
         });
     },
 
-    recipesFavoriteByUser: function(userId) {
-        database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
-            console.log(snapshot.val());
-        })
+    favoriteRecipes: function(userId) {
+        return new Promise(function(resolve,reject) {
+            database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
+                var favoritesRecipe = [];
+                if(snapshot.val()) {
+                    snapshot.forEach(function (element) {
+                        favoritesRecipe.push(element.val().recipeId)
+                    });
+                    resolve(favoritesRecipe);
+                }
+            })
+        });
     },
 
     removeRelationBetweenUserAndrecipe: function(userId, recipeId) {
@@ -118,18 +126,38 @@ myApp.UI = {
     showRecipes: function(datas) {
         var recipes = datas.hits,
             container = document.querySelector('.general-container'),
-            recipe = null;
-
-        for (var i = 0; i < recipes.length; i++) {
-            recipe = recipes[i].recipe;
-            container.innerHTML +=
-                `<div class="image-container" data-recipeid="${recipe.uri}">
-                <span>
-                    <i class="fas fa-heart"></i>
-                </span>
-                <img src="${recipe.image}"></img>
-            <div>`;
+            recipe = null,
+            recipeData = null;
+            
+        if(myApp.sessionStorage.getUser('user')) {
+            myApp.userManagement.favoriteRecipes(myApp.sessionStorage.getUser('user')).then(function(favoriteRecipes) {
+                
+                for (var i = 0; i < recipes.length; i++) {
+                    recipe = recipes[i].recipe;
+                    recipeData = myApp.tools.getRightUriAndId(recipe.uri);
+                    container.innerHTML +=
+                        `<div class="image-container" data-recipeid="${recipe.uri}">
+                        <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id) }>
+                            <i class="fas fa-heart"></i>
+                        </span>
+                        <img src="${recipe.image}"></img>
+                    <div>`;
+                }
+            });
         }
+        else {
+            for (var i = 0; i < recipes.length; i++) {
+                recipe = recipes[i].recipe;
+                container.innerHTML +=
+                    `<div class="image-container" data-recipeid="${recipe.uri}">
+                    <span>
+                        <i class="fas fa-heart"></i>
+                    </span>
+                    <img src="${recipe.image}"></img>
+                <div>`;
+            }
+        }
+
     },
 
     eventsListener: function() {

@@ -1,4 +1,4 @@
-.general-container {
+div.general-container {
   display: flex;
   flex-wrap: wrap;
   width: 100%; }
@@ -12,8 +12,7 @@
     position: absolute;
     font-size: 32px;
     color: #cfd8dc; }
-  .image-container .favorite {
+  .image-container .js-favorite {
     color: #f50057; }
-    
 
 /*# sourceMappingURL=styles.css.map */
