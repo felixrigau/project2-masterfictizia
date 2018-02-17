@@ -8,10 +8,12 @@ div.general-container {
   display: flex;
   justify-content: center;
   align-items: center; }
+  .image-container .actions {
+    position: absolute; }
   .image-container span {
-    position: absolute;
     font-size: 32px;
-    color: #cfd8dc; }
+    color: #FFFFFF;
+    padding: 0 10px; }
   .image-container .js-favorite {
     color: #f50057; }
 

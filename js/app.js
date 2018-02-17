@@ -161,14 +161,16 @@ myApp.UI = {
         var recipeData = myApp.tools.getRightUriAndId(recipe.uri);
         container.innerHTML +=
             `<div class="image-container" data-recipeid="${recipe.uri}">
-            <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id) }>
-                <i class="fas fa-heart"></i>
-            </span>
-            <span>
-                <i class="fas fa-eye"></i>
-            </span>
-            <img src="${recipe.image}"></img>
-        <div>`;
+                <div class="actions">
+                    <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id) }>
+                        <i class="fas fa-heart"></i>
+                    </span>
+                    <span>
+                        <i class="fas fa-eye"></i>
+                    </span>
+                </div>
+                <img src="${recipe.image}"></img>
+            <div>`;
     },
 
     eventsListener: function() {

@@ -1,5 +1,5 @@
 $pink: #f50057;
-$grey: #cfd8dc;
+$white: #FFFFFF;
 
 
 div.general-container {
@@ -14,10 +14,14 @@ div.general-container {
     justify-content: center;
     align-items: center;
     
-    span {
+    .actions{
         position: absolute;
+    }
+    
+    span {
         font-size: 32px;
-        color: $grey;
+        color: $white;
+        padding: 0 10px;
     }
     
     .js-favorite {
