@@ -142,7 +142,9 @@ myApp.recipe = {
         },
         
         decreaseFavoriteCounter:function(recipe) {
-            recipe.favoriteCounter -= 1;
+            if(recipe.favoriteCounter >= 1) {
+                recipe.favoriteCounter -= 1;
+            }
             myApp.recipe.management.updateRecipe(recipe);
         }
     },
