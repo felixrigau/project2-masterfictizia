@@ -124,11 +124,6 @@ myApp.recipeManagement = {
         else {
             console.log('La receta no existe.');
         }
-    },
-    
-    increaseFavoriteCounter: function(recipeId) {
-        var recipeRef = database.ref('/recipes/'+recipeId);
-        
     }
 
 }
