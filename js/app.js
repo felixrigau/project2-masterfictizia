@@ -97,6 +97,10 @@ myApp.recipeManagement = {
             database.ref('/recipes/' + recipe.id).set(recipe);
         }
     },
+    
+    updateRecipe: function(recipe) {
+        database.ref('/recipes/' + recipe.id).update(recipe);
+    },
 
     recipeAlreadyExist: function(recipeId) {
         return new Promise(function(resolve, reject) {
@@ -106,17 +110,25 @@ myApp.recipeManagement = {
         });
     },
 
-    saveRecipeFromAPI: function(json) {
+    saveRecipeFromAPI: function(json, properties) {
         if (json[0] && json[0].uri) {
             var recipe = json[0];
             var recipeData = myApp.tools.getRightUriAndId(recipe.uri)
             recipe.uri = recipeData.uri;
             recipe.id = recipeData.id;
+            if(properties.action === 'favorite') {
+                recipe.favoriteCounter = 1;
+            }
             myApp.recipeManagement.saveRecipe(recipe, false);
         }
         else {
             console.log('La receta no existe.');
         }
+    },
+    
+    increaseFavoriteCounter: function(recipeId) {
+        var recipeRef = database.ref('/recipes/'+recipeId);
+        
     }
 
 }
@@ -169,29 +181,36 @@ myApp.UI = {
                     var recipeContainerTag = e.path[2],
                         recipeData = myApp.tools.getRightUriAndId(recipeContainerTag.getAttribute('data-recipeid'));
 
-                    if (!e.target.parentNode.classList.contains('js-favorite')) {
 
                         myApp.queryParams.r = recipeData.uri;
 
                         myApp.recipeManagement.recipeAlreadyExist(recipeData.id).then(
-                            function(exist) {
-                                if (exist === false) {
-                                    myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI);
+                            function(recipe) {
+                                if(recipe) {
+                                    if(!e.target.parentNode.classList.contains('js-favorite')) {   
+                                        recipe.favoriteCounter += 1;
+                                        myApp.recipeManagement.updateRecipe(recipe);
+                                        myApp.userManagement.relationWithRecipe(userId, recipeData.id);
+                                        e.target.parentNode.classList.add('js-favorite');
+                                    }
+                                    else {
+                                        recipe.favoriteCounter -= 1;
+                                        myApp.recipeManagement.updateRecipe(recipe);
+                                        myApp.userManagement.removeRelationBetweenUserAndrecipe(userId, recipeData.id);
+                                        e.target.parentNode.classList.remove('js-favorite');
+                                    }
                                 }
-                                myApp.userManagement.relationWithRecipe(userId, recipeData.id);
-                                e.target.parentNode.classList.add('js-favorite');
+                                else {
+                                    myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipeManagement.saveRecipeFromAPI,{action:'favorite'});
+                                    myApp.userManagement.relationWithRecipe(userId, recipeData.id);
+                                    e.target.parentNode.classList.add('js-favorite');
+                                }
                             }
                         ).catch(
                             function(reason) {
-                                console.log('The promise has been rejected. Reason: ', reason)
+                                console.log('The promise has been rejected. Reason: ', reason);
                             }
                         );
-                    }
-                    else {
-                        myApp.userManagement.removeRelationBetweenUserAndrecipe(userId, recipeData.id);
-                        e.target.parentNode.classList.remove('js-favorite');
-                    }
-
                 }
                 else {
                     console.log('Debe loguearse para realizar esta operación');

@@ -4,14 +4,14 @@ var myApp = myApp || {};
 
 myApp.tools = {
     
-    makeAjaxRequest: function (httpMethod, url, callback) {
+    makeAjaxRequest: function (httpMethod, url, callback, proporties) {
         var request = new XMLHttpRequest();
         request.open(httpMethod,url, true);
         
         request.onreadystatechange = function () {
             if (request.readyState === 4 && request.status === 200 && request.responseText ) {
                 var json = JSON.parse(request.responseText);
-                callback(json);
+                callback(json, proporties);
                 return true;
             }else{
                 return false;
