@@ -14,17 +14,29 @@ myApp.queryParams = {
 }
 
 myApp.sessionStorage = {
-
+    /** @function
+    * @name storageUser
+    * @param {string} user - Id del usuario logueado.
+    * @description Almacena en el sessionStorage el Id del usurio, permitiendo verificar si el usuario esta logueado o no, y obtener su id.
+    */
     storageUser: function(user) {
         if (!myApp.sessionStorage.getUser()) {
             sessionStorage.setItem('user', user);
         }
     },
 
-    removeUser: function(user) {
+    /** @function
+    * @name removeUser
+    * @description Borra el usuario del sessionStorage.
+    */
+    removeUser: function() {
         sessionStorage.removeItem('user');
     },
 
+    /** @function
+    * @name getUser
+    * @description Recupera el id del usuario almacenado en el sessionStorage
+    */
     getUser: function() {
         return sessionStorage.getItem('user');
     }
@@ -33,6 +45,11 @@ myApp.sessionStorage = {
 
 myApp.userManagement = {
 
+    /** @function
+    * @name saveUser
+    * @param {Object} user - Usuario logueado 
+    * @description Almacena un usuario en la base de datos
+    */
     saveUser: function(user) {
         myApp.userManagement.userAlreadyExist(user.uid).then(function (exist) {
             if(exist === false) {
@@ -41,6 +58,12 @@ myApp.userManagement = {
         });
     },
 
+    /** @function
+    * @name userAlreadyExist
+    * @param {string} userId - Id de un usuario 
+    * @description Verifica si el usuario ya existe en la base de datos
+    * @return {Promise} Devuelve una promesa, si la promesa se resuelve, esta devolverá el usuario si este existe o false si no existe.
+    */
     userAlreadyExist: function(userId) {
         return new Promise(function(resolve, reject) {
             database.ref('/users/' + userId).once('value').then(function(snapshot) {
@@ -48,7 +71,14 @@ myApp.userManagement = {
             });
         });
     },
-
+    
+    /** @function
+    * @name favoriteRecipesIdByUser
+    * @param {string} userId - Id de un usuario 
+    * @description Busca en el nodo "/users-recipes/" todos los hijos que coinciden 
+    * con el Id del usuario y guarda los id de las recetas asociadas al usurio en un array
+    * @return {Promise} Devuelve una promesa y si ésta se resuelve, devolverá un listado con el Id de las recetas favoritas del usuario.
+    */
     favoriteRecipesIdByUser: function(userId) {
         return new Promise(function(resolve,reject) {
             database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
@@ -63,6 +93,14 @@ myApp.userManagement = {
         });
     },
     
+    /** @function
+    * @name favoriteRecipesByUser
+    * @param {string} userId - Id de un usuario 
+    * @description Busca en el nodo "/users-recipes/" todos los hijos que coinciden 
+    * con el Id del usuario y luego busca en nodo "/recipes/" todas las recetas 
+    * recetas asociadas al usurio y las guarda en un array.
+    * @return {Promise} Devuelve una promesa y si ésta se resuelve, devolverá un listado con las recetas favoritas del usuario.
+    */
     favoriteRecipesByUser: function(userId) {
         var favoriteRecipes = [];
         return new Promise(function(resolve,reject) {
@@ -80,6 +118,12 @@ myApp.userManagement = {
 
 myApp.recipe = {
     management: {
+        /** @function
+        * @name saveRecipe
+        * @param {Object} recipe - Una receta 
+        * @param {Boolean} verify - Define si se tiene que verificar si la receta ya existe en la base de datos. 
+        * @description Almacena una receta en la base de datos
+        */
         saveRecipe: function(recipe, verify) {
             if (verify) {
                 myApp.recipe.management.recipeAlreadyExist(recipe.id).then(
@@ -102,10 +146,21 @@ myApp.recipe = {
             }
         },
         
+        /** @function
+        * @name updateRecipe
+        * @param {Object} recipe - Una receta 
+        * @description Actualiza los valores de una receta en la base de datos
+        */
         updateRecipe: function(recipe) {
             database.ref('/recipes/' + recipe.id).update(recipe);
         },
     
+        /** @function
+        * @name recipeAlreadyExist
+        * @param {string} recipeId - Id de una receta 
+        * @description Verifica si la receta ya existe en la base de datos
+        * @return {Promise} Devuelve una promesa, si la promesa se resuelve, esta devolverá la receta si existe o false si no.
+        */
         recipeAlreadyExist: function(recipeId) {
             return new Promise(function(resolve, reject) {
                 database.ref('/recipes/' + recipeId).once('value').then(function(snapshot) {
@@ -114,6 +169,15 @@ myApp.recipe = {
             });
         },
     
+        /** @callback
+        * @name saveRecipeFromAPI
+        * @param {Object} json - Objeto que contiene los datos de una receta extraida de la base de datos 
+        * @param {Object} proporties - Parametro opcional para la función callback, contiene propiedades extras
+        * @param {string} proporties.action - La acción de origen desde donde se realiza la petición AJAX. Posibles valores: 'favorite' o 'view' 
+        * @param {requestCallback} proporties.callback - Función callback interna que depende si properties.action == 'view' 
+        * @description Almacena en la base de datos una receta proveniendte 
+        * de la API, previamente se le insertan a la receta algunas propiedades extras
+        */
         saveRecipeFromAPI: function(json, properties) {
             if (json[0] && json[0].uri) {
                 var recipe = json[0];
@@ -134,6 +198,14 @@ myApp.recipe = {
             }
         },
         
+        /** @function
+        * @name addRelationWithUser
+        * @param {string} userId - Id de un usuario
+        * @param {string} recipeId - Id de una receta 
+        * @description Crea en la base de datos una relación entre un usuario y una receta, 
+        * en el nodo "/users-recipes/" el cual permite establecer la relación 
+        * de muchos a muchos entre dichas instancias
+        */
         addRelationWithUser: function(userId, recipeId) {
             database.ref('/users-recipes/' + userId + '_' + recipeId).set({
                 userId: userId,
@@ -141,21 +213,42 @@ myApp.recipe = {
             });
         },
         
+        /** @function
+        * @name removeRelationWithUser
+        * @param {string} userId - Id de un usuario
+        * @param {string} recipeId - Id de una receta 
+        * @description Elimina en la base de datos la relación entre un usuario y una receta.
+        */
         removeRelationWithUser: function(userId, recipeId) {
             database.ref('/users-recipes/' + userId + '_' + recipeId).remove();
         },
         
+        /** @function
+        * @name recipeMoreFavorites
+        * @param {number} amount - Cantidad de recetas favoritas que seran devueltas.
+        * @description Ordena descendentemente y devuelve las recetas que han sido marcada más veces como favoritas.
+        */
         recipeMoreFavorites: function(amount) {
             database.ref('/recipes/').orderByChild('favoriteCounter').limitToLast(amount).once('value',function (snapshot) {
                 console.log(snapshot.val())
             });
         },
         
+        /** @function
+        * @name increaseFavoriteCounter
+        * @param {Object} recipe - Receta que será modificada.
+        * @description Incrementa el contador de marcada como favorita.
+        */
         increaseFavoriteCounter:function(recipe) {
             recipe.favoriteCounter += 1;
             myApp.recipe.management.updateRecipe(recipe);
         },
         
+        /** @function
+        * @name decreaseFavoriteCounter
+        * @param {Object} recipe - Receta que será modificada.
+        * @description Decrementa el contador de marcada como favorita.
+        */
         decreaseFavoriteCounter:function(recipe) {
             if(recipe.favoriteCounter >= 1) {
                 recipe.favoriteCounter -= 1;
@@ -165,6 +258,11 @@ myApp.recipe = {
     },
     
     ui: {
+        /** @function
+        * @name favoriteAction
+        * @param {Object} event - Evento que es lanzado en la acción de marcar/desmarcar una receta como favorita.
+        * @description Engloba toda la lógica y el comportamiento relacionado con marcar o desmarcar una receta como favorita.
+        */
         favoriteAction:function(event) {
             var userId = myApp.sessionStorage.getUser();
             if (userId) {
@@ -201,6 +299,11 @@ myApp.recipe = {
             }
         },
         
+        /** @function
+        * @name viewAction
+        * @param {Object} event - Evento que es lanzado en la acción de visualizar una receta.
+        * @description Engloba toda la lógica y el comportamiento relacionado con visualizar una receta.
+        */
         viewAction:function(event) {
             var actionsContainerTag = event.path[2],
                     recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
@@ -223,6 +326,11 @@ myApp.recipe = {
                 );
         },
         
+        /** @function
+        * @name markAsfavorite
+        * @param {Object} obj - Objeto de propiedades que incluye la receta que sera marcada como favorita.
+        * @description Engloba toda la lógica específica con marcar una receta como favorita.
+        */
         markAsfavorite:function(obj) {
             if(obj.recipe) {
                 myApp.recipe.management.increaseFavoriteCounter(obj.recipe);
@@ -231,6 +339,11 @@ myApp.recipe = {
             myApp.UI.addClass(obj.spanTag, 'js-favorite');
         },
         
+        /** @function
+        * @name markAsfavorite
+        * @param {Object} obj - Objeto de propiedades que incluye la receta que sera desmarcada como favorita.
+        * @description Engloba toda la lógica específica con desmarcar una receta como favorita.
+        */
         unmarkAsfavorite:function(obj) {
             if(obj.recipe) {
                 myApp.recipe.management.decreaseFavoriteCounter(obj.recipe);
@@ -247,6 +360,11 @@ myApp.recipe = {
 
 myApp.UI = {
 
+    /** @function
+    * @name showRecipes
+    * @param {array} datas - Listado de recetas.
+    * @description Muestra las recetas provenientes de la API.
+    */
     showRecipes: function(datas) {
         var recipes = datas.hits,
             container = document.querySelector('.general-container'),
@@ -268,6 +386,13 @@ myApp.UI = {
 
     },
     
+    /** @function
+    * @name recipeComponent
+    * @param {Object} recipe - Receta que será creada.
+    * @param {Object} container - Etiqueta HTML donde será insertada la tarjeta que muestra los datos de la receta.
+    * @param {array} favoriteRecipes - Listado de las recetas favoritas del usuario logueado.
+    * @description Crea la tarjeta que muestra los datos de la receta y la inserta en su contenedor.
+    */
     recipeComponent:function (recipe, container, favoriteRecipes) {
         var recipeData = myApp.tools.getRightUriAndId(recipe.uri);
         container.innerHTML +=
@@ -341,6 +466,4 @@ myApp.start();
 
 //TODO
 /*
-Refactorizar lógica de inserción de recetas
-Documentar con JSDoc
 */

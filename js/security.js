@@ -54,6 +54,6 @@ auth.onAuthStateChanged(function(user) {
       myApp.sessionStorage.storageUser(user.uid);
     } else {
       document.querySelector('body').style.backgroundColor = '#4dd0e1';
-      myApp.sessionStorage.removeUser('user');
+      myApp.sessionStorage.removeUser();
     }
 })
