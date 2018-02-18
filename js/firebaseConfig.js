@@ -11,7 +11,11 @@ var config = {
 
 firebase.initializeApp(config);
 
+/** @global */
 var database = firebase.database();
+/** @global */
 var auth = firebase.auth();
+/** @global */
 var gitHubProvider = new firebase.auth.GithubAuthProvider();
+/** @global */
 var googleProvider = new firebase.auth.GoogleAuthProvider();
