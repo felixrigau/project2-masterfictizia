@@ -1,6 +1,5 @@
+/** @global */
 var myApp = myApp || {};
-
-/*** TOOLS ***/
 
 myApp.tools = {
     

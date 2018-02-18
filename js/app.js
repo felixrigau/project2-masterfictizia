@@ -1,9 +1,9 @@
 /*global auth*/
 /*global database*/
-
+/** @global */
 var myApp = myApp || {};
 
-
+/** @global */
 myApp.queryParams = {
     app_id: myApp.config.appId,
     app_key: myApp.config.appKey,
@@ -14,8 +14,9 @@ myApp.queryParams = {
 }
 
 myApp.sessionStorage = {
+
     storageUser: function(user) {
-        if (!myApp.sessionStorage.getUser(user)) {
+        if (!myApp.sessionStorage.getUser()) {
             sessionStorage.setItem('user', user);
         }
     },
@@ -24,7 +25,7 @@ myApp.sessionStorage = {
         sessionStorage.removeItem('user');
     },
 
-    getUser: function(user) {
+    getUser: function() {
         return sessionStorage.getItem('user');
     }
 
@@ -165,7 +166,7 @@ myApp.recipe = {
     
     ui: {
         favoriteAction:function(event) {
-            var userId = myApp.sessionStorage.getUser('user');
+            var userId = myApp.sessionStorage.getUser();
             if (userId) {
                 var actionsContainerTag = event.path[2],
                     recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
@@ -253,7 +254,7 @@ myApp.UI = {
             recipeData = null;
             
         if(myApp.sessionStorage.getUser('user')) {
-            myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser('user')).then(function(favoriteRecipes) {
+            myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
                 for (var i = 0; i < recipes.length; i++) {
                     myApp.UI.recipeComponent(recipes[i].recipe, container, favoriteRecipes);
                 }

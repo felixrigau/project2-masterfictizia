@@ -3,6 +3,7 @@
 /*global googleProvider*/
 /*global auth*/
 
+/** @global */
 var myApp = myApp || {};
 
 myApp.security = {
