@@ -316,7 +316,7 @@ myApp.UI = {
         });
 
         document.querySelector('.logoutGithub').addEventListener('click', function() {
-            myApp.security.logoutGithub();
+            myApp.security.logoutUser();
         });
 
         document.querySelector('.search').addEventListener('keyup', function(e) {
