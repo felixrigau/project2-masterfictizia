@@ -7,7 +7,7 @@ var myApp = myApp || {};
 
 myApp.security = {
     
-    /**
+    /** @function
     * @name loginGithub
     * @description Ejecuta el mecanismo de login Oauth con Github que proporciona firebase  
     */
@@ -19,7 +19,7 @@ myApp.security = {
         });
     },
     
-    /**
+    /** @function
     * @name loginGoogle
     * @description Ejecuta el mecanismo de login Oauth con Google que proporciona firebase  
     */
@@ -31,7 +31,7 @@ myApp.security = {
         });
     },
     
-    /**
+    /** @function
     * @name logoutUser
     * @description Ejecuta el mecanismo de logout que proporciona firebase  
     */
@@ -44,8 +44,8 @@ myApp.security = {
     }
 }
 
-/**
-* @description Define el comportamiento del evento "onAuthStateChanged".Este se dispara cuando ocurre las acciones de login o logout 
+/** @function
+* @description Define el comportamiento del evento "onAuthStateChanged" de la instacion auth.Este se dispara cuando ocurre las acciones de login o logout 
 */
 auth.onAuthStateChanged(function(user) {
     if (user) {
