@@ -48,7 +48,7 @@ myApp.userManagement = {
         });
     },
 
-    favoriteRecipes: function(userId) {
+    favoriteRecipesIdByUser: function(userId) {
         return new Promise(function(resolve,reject) {
             database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
                 var favoriteRecipes = [];
@@ -59,6 +59,19 @@ myApp.userManagement = {
                 }
                 resolve(favoriteRecipes);
             })
+        });
+    },
+    
+    favoriteRecipesByUser: function(userId) {
+        var favoriteRecipes = [];
+        return new Promise(function(resolve,reject) {
+            database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('child_added', function(snapshot) {
+                    let recipeRef = database.ref('/recipes/'+snapshot.val().recipeId).once('value').then(function(snapRecipe) {
+                        favoriteRecipes.push(snapRecipe.val());
+                    }
+                );
+            })
+            resolve(favoriteRecipes)
         });
     }
 
@@ -240,7 +253,7 @@ myApp.UI = {
             recipeData = null;
             
         if(myApp.sessionStorage.getUser('user')) {
-            myApp.userManagement.favoriteRecipes(myApp.sessionStorage.getUser('user')).then(function(favoriteRecipes) {
+            myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser('user')).then(function(favoriteRecipes) {
                 for (var i = 0; i < recipes.length; i++) {
                     myApp.UI.recipeComponent(recipes[i].recipe, container, favoriteRecipes);
                 }
