@@ -18,10 +18,11 @@ div.general-container {
         position: absolute;
     }
     
-    span {
+    span, a {
         font-size: 32px;
         color: $white;
         padding: 0 10px;
+        text-decoration: none;
     }
     
     .js-favorite {

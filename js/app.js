@@ -401,6 +401,9 @@ myApp.UI = {
                     <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id)} data-action="favorite">
                         <i class="fas fa-heart"></i>
                     </span>
+                    <a href="${recipe.url}"  target="_blank">
+                        <i class="fas fa-link"></i>
+                    </a>
                     <span data-action="view">
                         <i class="fas fa-eye"></i>
                     </span>
@@ -423,7 +426,7 @@ myApp.UI = {
 
     eventsListener: function() {
         document.querySelector('.general-container').addEventListener('click', function(e) {
-            if (e.target.nodeName === 'I') {
+            if (e.target.nodeName === 'I' && e.target.hasAttribute('data-action')) {
                 if(e.target.parentNode.getAttribute('data-action') === 'view') {
                     myApp.recipe.ui.viewAction(e);
                 } 

@@ -10,10 +10,11 @@ div.general-container {
   align-items: center; }
   .image-container .actions {
     position: absolute; }
-  .image-container span {
+  .image-container span, .image-container a {
     font-size: 32px;
     color: #FFFFFF;
-    padding: 0 10px; }
+    padding: 0 10px;
+    text-decoration: none; }
   .image-container .js-favorite {
     color: #f50057; }
 
