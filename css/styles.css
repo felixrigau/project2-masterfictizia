@@ -3,19 +3,29 @@ div.general-container {
   flex-wrap: wrap;
   width: 100%; }
 
-.image-container {
-  position: relative;
+.recipe-card {
+  background-color: #fafafa; }
+
+.recipe-card__name {
+  font-family: Lato;
+  font-size: 1.2rem;
+  padding: 0.875rem;
+  margin: 0;
+  color: #37474f; }
+
+.recipe-card__actions {
+  background-color: #bdbdbd;
+  padding: 0.875rem;
   display: flex;
-  justify-content: center;
-  align-items: center; }
-  .image-container .actions {
-    position: absolute; }
-  .image-container span, .image-container a {
-    font-size: 32px;
+  justify-content: space-around; }
+  .recipe-card__actions span, .recipe-card__actions a {
+    font-size: 24px;
     color: #FFFFFF;
-    padding: 0 10px;
+    padding: 0 10px; }
+  .recipe-card__actions a {
     text-decoration: none; }
-  .image-container .js-favorite {
-    color: #f50057; }
+
+.js-favorite {
+  color: #f50057; }
 
 /*# sourceMappingURL=styles.css.map */

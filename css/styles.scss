@@ -1,5 +1,8 @@
 $pink: #f50057;
+$soft-grey: #fafafa;
 $white: #FFFFFF;
+
+$text-grey-dark: #37474f;
 
 
 div.general-container {
@@ -8,24 +11,35 @@ div.general-container {
     width: 100%;
 }
 
-.image-container {
-    position: relative;
+.recipe-card {
+    background-color:$soft-grey;
+}
+
+.recipe-card__name {
+    font-family: Lato;
+    font-size: 1.2rem;
+    padding: 0.875rem;
+    margin: 0;
+    color: $text-grey-dark;
+}
+
+.recipe-card__actions {
+    background-color: #bdbdbd;
+    padding: 0.875rem;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    .actions{
-        position: absolute;
-    }
+    justify-content: space-around;
     
     span, a {
-        font-size: 32px;
+        font-size: 24px;
         color: $white;
         padding: 0 10px;
-        text-decoration: none;
     }
     
-    .js-favorite {
-        color: $pink;
+    a {
+        text-decoration: none;
     }
+}
+
+.js-favorite {
+    color: $pink;
 }
