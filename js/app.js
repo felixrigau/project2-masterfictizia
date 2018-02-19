@@ -396,20 +396,25 @@ myApp.UI = {
     recipeComponent:function (recipe, container, favoriteRecipes) {
         var recipeData = myApp.tools.getRightUriAndId(recipe.uri);
         container.innerHTML +=
-            `<div class="image-container">
-                <div class="actions" data-recipeid="${recipe.uri}">
+            `<div class="recipe-card">
+                <img class="recipe-card__image" src="${recipe.image}">
+                <div class="recipe-card__name-wrapper">
+                    <p class="recipe-card__name">
+                        ${recipe.label}
+                    </p>
+                </div>
+                <div class="recipe-card__actions" data-recipeid="${recipe.uri}">
                     <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id)} data-action="favorite">
                         <i class="fas fa-heart"></i>
                     </span>
-                    <a href="${recipe.url}"  target="_blank">
+                    <a href="${recipe.url}" target="_blank">
                         <i class="fas fa-link"></i>
                     </a>
                     <span data-action="view">
-                        <i class="fas fa-eye"></i>
+                        <i class="fas fa-list-ul"></i>
                     </span>
                 </div>
-                <img src="${recipe.image}"></img>
-            <div>`;
+            </div>`;
     },
     
     addClass:function(tag, cssClass) {
@@ -426,7 +431,7 @@ myApp.UI = {
 
     eventsListener: function() {
         document.querySelector('.general-container').addEventListener('click', function(e) {
-            if (e.target.nodeName === 'I' && e.target.hasAttribute('data-action')) {
+            if (e.target.nodeName === 'I' && e.target.parentNode.hasAttribute('data-action')) {
                 if(e.target.parentNode.getAttribute('data-action') === 'view') {
                     myApp.recipe.ui.viewAction(e);
                 } 

@@ -4,12 +4,12 @@ div.general-container {
   width: 100%; }
 
 .recipe-card {
-  background-color: #fafafa; }
+  background-color: #fafafa;
+  margin: 5px; }
 
 .recipe-card__name {
   font-family: Lato;
   font-size: 1.2rem;
-  padding: 0.875rem;
   margin: 0;
   color: #37474f; }
 
@@ -21,11 +21,11 @@ div.general-container {
   .recipe-card__actions span, .recipe-card__actions a {
     font-size: 24px;
     color: #FFFFFF;
-    padding: 0 10px; }
+    padding: 0 10px;
+    cursor: pointer; }
   .recipe-card__actions a {
     text-decoration: none; }
-
-.js-favorite {
-  color: #f50057; }
+  .recipe-card__actions .js-favorite {
+    color: #f50057; }
 
 /*# sourceMappingURL=styles.css.map */
