@@ -1,19 +1,40 @@
-$pink: #f50057;
+//Colors
+
+$pink: #ff4081;
 $soft-grey: #fafafa;
+$grey: #bdbdbd;
+$dark-grey: #37474f;
+$blue-dark: #444a71;
 $white: #FFFFFF;
 
-$text-grey-dark: #37474f;
+//Fonts
+
+$Pacifico: 'Pacifico', cursive;
 
 
-div.general-container {
+
+.general-wrapper {
+    min-width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 0 1rem;
+}
+
+.recipes-container {
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
-    width: 100%;
 }
 
 .recipe-card {
     background-color:$soft-grey;
-    margin: 5px;
+    border: 1px solid #e0e0e0;
+    display: flex;
+    flex: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 12px;
+    box-shadow: 0px 0px 4px 0px #eeeeee;
 }
 
 .recipe-card__image {
@@ -23,12 +44,12 @@ div.general-container {
 .recipe-card__name {
     font-family: Lato;
     font-size: 1.2rem;
-    margin: 0;
-    color: $text-grey-dark;
+    margin: 1rem 0.875rem;
+    color: $dark-grey;
 }
 
 .recipe-card__actions {
-    background-color: #bdbdbd;
+    background-color: $blue-dark;
     padding: 0.875rem;
     display: flex;
     justify-content: space-around;
@@ -38,6 +59,7 @@ div.general-container {
         color: $white;
         padding: 0 10px;
         cursor: pointer;
+        transition: font-size 0.3s;
     }
     
     a {
@@ -46,6 +68,7 @@ div.general-container {
     
     .js-favorite {
         color: $pink;
+        font-size: 32px;
     }
 }
 
