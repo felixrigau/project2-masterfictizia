@@ -444,15 +444,15 @@ myApp.UI = {
             }
         });
 
-        document.querySelector('.loginGithub').addEventListener('click', function() {
+        document.querySelector('.js-loginGithub').addEventListener('click', function() {
             myApp.security.loginGithub();
         });
 
-        document.querySelector('.loginGoogle').addEventListener('click', function() {
+        document.querySelector('.js-loginGoogle').addEventListener('click', function() {
             myApp.security.loginGoogle();
         });
 
-        document.querySelector('.logoutGithub').addEventListener('click', function() {
+        document.querySelector('.js-logoutGithub').addEventListener('click', function() {
             myApp.security.logoutUser();
         });
 

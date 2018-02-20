@@ -8,15 +8,34 @@ header {
   background-color: #ffab00;
   width: 100%;
   position: fixed;
-  z-index: 2; }
+  z-index: 3; }
 
 .header__logo {
   color: #FFFFFF;
   font-family: "Pacifico", cursive;
-  font-size: 32px;
-  text-align: center;
-  margin: 0;
+  font-size: 38px;
+  margin: 0 0 10px 30px;
   padding: 0; }
+
+.authentication-area {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 3;
+  display: flex; }
+
+.authentication-area__login, .authentication-area__user {
+  display: flex;
+  padding: 35px 30px 0 0; }
+
+.authentication-area__btn {
+  color: white;
+  font-size: 20px;
+  font-family: "Lato";
+  margin-left: 20px;
+  cursor: pointer; }
+  .authentication-area__btn span {
+    margin: 5px; }
 
 .search {
   position: relative;
@@ -41,7 +60,7 @@ header {
   background-color: rgba(255, 255, 255, 0.8);
   border: none;
   width: 50%;
-  font-family: Lato;
+  font-family: "Lato";
   font-size: 18px; }
 
 .general-wrapper {
@@ -66,7 +85,7 @@ header {
   box-shadow: 0px 0px 4px 0px #eeeeee; }
 
 .recipe-card__name {
-  font-family: Lato;
+  font-family: "Lato";
   font-size: 1.2rem;
   margin: 1rem 0.875rem;
   color: #37474f; }
@@ -89,5 +108,8 @@ header {
   .recipe-card__actions .js-favorite {
     color: #ff4081;
     font-size: 32px; }
+
+.hidden {
+  display: none; }
 
 /*# sourceMappingURL=styles.css.map */

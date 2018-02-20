@@ -19,15 +19,24 @@
         </div>
         <input type="text" class="js-search search__input" name="search" placeholder="Search any recipes by ingredients"/>
     </div>
-    <button type="button" class="loginGithub btn btn-block">
-        Github
-    </button>
-    <button type="button" class="loginGoogle btn btn-block">
-        Google
-    </button>
-    <button type="button" class="logoutGithub btn btn-block">
-        Logout
-    </button>
+    <div class="authentication-area">
+        <div class="authentication-area__login hidden">
+            <div class="js-loginGithub github-button authentication-area__btn" title="Registrarse con Github">
+                <span><i class="fab fa-github"></i></span><span>Github</span>
+            </div>
+            <div class="js-loginGoogle google-button authentication-area__btn" title="Registrarse con Google">
+                <span><i class="fab fa-google"></i></span><span>Google</span>
+            </div>
+        </div>
+        <div class="authentication-area__user">
+            <div class="js-logoutGithub logout-button authentication-area__btn"  title="Lista tus recetas favoritas">
+                <span><i class="fas fa-heart"></i></span><span>Tus recetas</span>
+            </div>
+            <div class="js-logoutGithub logout-button authentication-area__btn">
+                <span title="Cerrar sessión"><i class="fas fa-sign-out-alt"></i></span>
+            </div>
+        </div>
+    </div>
     <div class="general-wrapper">
         <div class="js-recipes-container recipes-container">
             
