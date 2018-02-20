@@ -49,10 +49,12 @@ $Pacifico: 'Pacifico', cursive;
 }
 
 .recipe-card__actions {
+    align-items: center;
     background-color: $blue-dark;
-    padding: 0.875rem;
     display: flex;
+    height: 40px;
     justify-content: space-around;
+    padding: 0.875rem;
     
     span, a {
         font-size: 24px;
