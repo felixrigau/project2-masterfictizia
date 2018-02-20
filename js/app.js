@@ -184,6 +184,7 @@ myApp.recipe = {
                 var recipeData = myApp.tools.getRightUriAndId(recipe.uri)
                 recipe.uri = recipeData.uri;
                 recipe.id = recipeData.id;
+                recipe.totalNutrients = {}; //Fix insertion in firebase DB
                 if(properties.action === 'favorite') {
                     recipe.favoriteCounter = 1;
                 }
@@ -455,7 +456,7 @@ myApp.UI = {
             myApp.security.logoutUser();
         });
 
-        document.querySelector('.search').addEventListener('keyup', function(e) {
+        document.querySelector('.js-search').addEventListener('keyup', function(e) {
             if (e.keyCode === 13) {
                 myApp.queryParams.q = this.value;
                 // myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
