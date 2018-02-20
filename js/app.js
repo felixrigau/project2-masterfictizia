@@ -420,6 +420,47 @@ myApp.UI = {
             </div>`;
     },
     
+    createLogginArea: function () {
+        var authArea = document.querySelector('.authentication-area');
+        authArea.innerHTML = '';  
+        authArea.innerHTML = 
+            `<div class="authentication-area__login">
+                <div class="js-loginGithub github-button authentication-area__btn" title="Registrarse con Github">
+                    <span><i class="fab fa-github"></i></span><span>Github</span>
+                </div>
+                <div class="js-loginGoogle google-button authentication-area__btn" title="Registrarse con Google">
+                    <span><i class="fab fa-google"></i></span><span>Google</span>
+                </div>
+            </div>`;
+            
+        document.querySelector('.js-loginGithub').addEventListener('click', function() {
+            myApp.security.loginGithub();
+        });
+
+        document.querySelector('.js-loginGoogle').addEventListener('click', function() {
+            myApp.security.loginGoogle();
+        });
+    },
+    
+    createUserArea: function (user) {
+        var authArea = document.querySelector('.authentication-area');
+        authArea.innerHTML = ''; 
+        authArea.innerHTML = 
+            `<div class="authentication-area__user">
+                <img class="authentication-area__avatar" src="${user.photoURL}"></img>
+                <div class="js-favorites-list logout-button authentication-area__btn"  title="Lista tus recetas favoritas">
+                    <span><i class="fas fa-heart"></i></span><span>Tus recetas</span>
+                </div>
+                <div class="js-logout logout-button authentication-area__btn">
+                    <span title="Cerrar sessión"><i class="fas fa-sign-out-alt"></i></span>
+                </div>
+            </div>`;
+            
+        document.querySelector('.js-logout').addEventListener('click', function() {
+            myApp.security.logoutUser();
+        });
+    },
+    
     addClass:function(tag, cssClass) {
         tag.classList.add(cssClass);
     },
@@ -442,18 +483,6 @@ myApp.UI = {
                     myApp.recipe.ui.favoriteAction(e);
                 }
             }
-        });
-
-        document.querySelector('.js-loginGithub').addEventListener('click', function() {
-            myApp.security.loginGithub();
-        });
-
-        document.querySelector('.js-loginGoogle').addEventListener('click', function() {
-            myApp.security.loginGoogle();
-        });
-
-        document.querySelector('.js-logoutGithub').addEventListener('click', function() {
-            myApp.security.logoutUser();
         });
 
         document.querySelector('.js-search').addEventListener('keyup', function(e) {

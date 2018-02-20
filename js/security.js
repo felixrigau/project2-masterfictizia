@@ -50,10 +50,10 @@ myApp.security = {
 */
 auth.onAuthStateChanged(function(user) {
     if (user) {
-      document.querySelector('body').style.backgroundColor = 'fafafa';
-      myApp.sessionStorage.storageUser(user.uid);
+        myApp.UI.createUserArea(user);
+        myApp.sessionStorage.storageUser(user.uid);
     } else {
-      document.querySelector('body').style.backgroundColor = '#4dd0e1';
-      myApp.sessionStorage.removeUser();
+        myApp.UI.createLogginArea();
+        myApp.sessionStorage.removeUser();
     }
 })

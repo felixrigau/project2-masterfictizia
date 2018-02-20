@@ -26,7 +26,8 @@ header {
 
 .authentication-area__login, .authentication-area__user {
   display: flex;
-  padding: 35px 30px 0 0; }
+  align-items: center;
+  padding: 30px 30px 0 0; }
 
 .authentication-area__btn {
   color: white;
@@ -36,6 +37,10 @@ header {
   cursor: pointer; }
   .authentication-area__btn span {
     margin: 5px; }
+
+img.authentication-area__avatar {
+  width: 35px;
+  border-radius: 100%; }
 
 .search {
   position: relative;
