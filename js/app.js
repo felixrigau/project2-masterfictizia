@@ -371,18 +371,21 @@ myApp.UI = {
             container = document.querySelector('.js-recipes-container'),
             recipe = null,
             recipeData = null;
-            
+        
+        container.innerHTML = '';
         if(myApp.sessionStorage.getUser('user')) {
             myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
                 for (var i = 0; i < recipes.length; i++) {
                     myApp.UI.recipeComponent(recipes[i].recipe, container, favoriteRecipes);
                 }
+                myApp.UI.moveScrollToRecipes();
             });
         }
         else {
             for (var i = 0; i < recipes.length; i++) {
                 myApp.UI.recipeComponent(recipes[i].recipe, container);
             }
+            myApp.UI.moveScrollToRecipes();
         }
 
     },
@@ -459,6 +462,12 @@ myApp.UI = {
         document.querySelector('.js-logout').addEventListener('click', function() {
             myApp.security.logoutUser();
         });
+    },
+    
+    moveScrollToRecipes: function () {
+        var scroll = document.querySelector('.search').scrollHeight;
+        var headerHeight = document.querySelector('header').offsetHeight;
+        window.scrollTo(0, scroll-headerHeight);
     },
     
     addClass:function(tag, cssClass) {
