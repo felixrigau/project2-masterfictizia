@@ -465,9 +465,13 @@ myApp.UI = {
     },
     
     moveScrollToRecipes: function () {
+        window.scrollTo(0, myApp.UI.getRecipeContainerPosition());
+    },
+    
+    getRecipeContainerPosition: function (argument) {
         var scroll = document.querySelector('.search').scrollHeight;
         var headerHeight = document.querySelector('header').offsetHeight;
-        window.scrollTo(0, scroll-headerHeight);
+        return scroll-headerHeight;
     },
     
     addClass:function(tag, cssClass) {
