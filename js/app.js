@@ -278,7 +278,9 @@ myApp.recipe = {
                     recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
                     recipeId = recipeData.id,
                     spanTag = event.target.parentNode;
-                    myApp.queryParams.r = recipeData.uri;
+                
+                myApp.tools.cleanQueryParams();        
+                myApp.queryParams.r = recipeData.uri;
 
                 myApp.recipe.management.recipeAlreadyExist(recipeId).then(
                     function(recipe) {
@@ -525,6 +527,8 @@ myApp.UI = {
         document.querySelector('.js-search').addEventListener('keyup', function(e) {
             if (e.keyCode === 13) {
                 myApp.queryParams.q = this.value;
+                myApp.queryParams.from = 0;
+                myApp.queryParams.to = 30;
                 myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
                 // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
             }
@@ -537,3 +541,9 @@ myApp.start = function() {
     myApp.UI.eventsListener()
 }
 myApp.start();
+
+
+/*TODO*/
+/*
+Cambiar id en el codigo html de la receta
+*/
