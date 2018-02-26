@@ -80,7 +80,7 @@ myApp.userManagement = {
     * @return {Promise} Devuelve una promesa y si ésta se resuelve, devolverá un listado con el Id de las recetas favoritas del usuario.
     */
     favoriteRecipesIdByUser: function(userId) {
-        return new Promise(function(resolve,reject) {
+        return new Promise(function(resolve, reject) {
             database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('value', function(snapshot) {
                 var favoriteRecipes = [];
                 if(snapshot.val()) {
@@ -102,15 +102,22 @@ myApp.userManagement = {
     * @return {Promise} Devuelve una promesa y si ésta se resuelve, devolverá un listado con las recetas favoritas del usuario.
     */
     favoriteRecipesByUser: function(userId) {
-        var favoriteRecipes = [];
-        return new Promise(function(resolve,reject) {
-            database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).on('child_added', function(snapshot) {
-                    let recipeRef = database.ref('/recipes/'+snapshot.val().recipeId).once('value').then(function(snapRecipe) {
-                        favoriteRecipes.push(snapRecipe.val());
-                    }
-                );
+        var favoriteRecipes = [],
+            recipeCount;
+        return new Promise(function(resolve, reject) {
+            database.ref('/users-recipes/').orderByChild('userId').equalTo(userId).once('value', function(snapshot) {
+                if(snapshot.val()){
+                    recipeCount = Object.keys(snapshot.val()).length;
+                    snapshot.forEach(function (element) {
+                        var recipeRef = database.ref('/recipes/'+element.val().recipeId).once('value', function(snapRecipe) {
+                            favoriteRecipes.push(snapRecipe.val());
+                            if(favoriteRecipes.length === recipeCount) {
+                                resolve(favoriteRecipes)
+                            }
+                        });
+                    });
+                }
             })
-            resolve(favoriteRecipes)
         });
     }
 
@@ -373,10 +380,11 @@ myApp.UI = {
             recipeData = null;
         
         container.innerHTML = '';
-        if(myApp.sessionStorage.getUser('user')) {
+        if(myApp.sessionStorage.getUser()) {
             myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
                 for (var i = 0; i < recipes.length; i++) {
-                    myApp.UI.recipeComponent(recipes[i].recipe, container, favoriteRecipes);
+                    recipeData = myApp.tools.getRightUriAndId(recipes[i].recipe.uri);
+                    myApp.UI.recipeComponent(recipes[i].recipe, container, myApp.tools.isFavorite(favoriteRecipes, recipeData.id));
                 }
                 myApp.UI.moveScrollToRecipes();
             });
@@ -394,11 +402,16 @@ myApp.UI = {
     * @name recipeComponent
     * @param {Object} recipe - Receta que será creada.
     * @param {Object} container - Etiqueta HTML donde será insertada la tarjeta que muestra los datos de la receta.
-    * @param {array} favoriteRecipes - Listado de las recetas favoritas del usuario logueado.
+    * @param {Boolean} isFavorite - True o false en dependencia si la receta es favorita para el usuario logueado.
     * @description Crea la tarjeta que muestra los datos de la receta y la inserta en su contenedor.
     */
-    recipeComponent:function (recipe, container, favoriteRecipes) {
-        var recipeData = myApp.tools.getRightUriAndId(recipe.uri);
+    recipeComponent:function (recipe, container, isFavorite) {
+        var recipeData = myApp.tools.getRightUriAndId(recipe.uri),
+            cssClass = '';
+        
+        if (isFavorite) {
+            cssClass = 'js-favorite';
+        }
         container.innerHTML +=
             `<div class="recipe-card">
                 <img class="recipe-card__image" src="${recipe.image}">
@@ -412,7 +425,7 @@ myApp.UI = {
                         <a href="${recipe.url}" target="_blank">
                             <i class="fas fa-link"></i>
                         </a>
-                        <span ${ myApp.tools.isFavorite(favoriteRecipes, recipeData.id)} data-action="favorite">
+                        <span class='${cssClass}' data-action="favorite">
                             <i class="fas fa-heart"></i>
                         </span>
                         <span data-action="view">
@@ -451,7 +464,7 @@ myApp.UI = {
         authArea.innerHTML = 
             `<div class="authentication-area__user">
                 <img class="authentication-area__avatar" src="${user.photoURL}"></img>
-                <div class="js-favorites-list logout-button authentication-area__btn"  title="Lista tus recetas favoritas">
+                <div class="js-favorites-list authentication-area__btn"  title="Lista tus recetas favoritas">
                     <span><i class="fas fa-heart"></i></span><span>Tus recetas</span>
                 </div>
                 <div class="js-logout logout-button authentication-area__btn">
@@ -461,6 +474,17 @@ myApp.UI = {
             
         document.querySelector('.js-logout').addEventListener('click', function() {
             myApp.security.logoutUser();
+        });
+        
+        document.querySelector('.js-favorites-list').addEventListener('click', function(e) {
+            var container = document.querySelector('.js-recipes-container');
+            container.innerHTML = '';
+            myApp.userManagement.favoriteRecipesByUser(myApp.sessionStorage.getUser()).then(function (favoriteRecipes) {
+                favoriteRecipes.forEach(function (element) {
+                    myApp.UI.recipeComponent(element,container, true);
+                });
+                myApp.UI.moveScrollToRecipes();
+            });
         });
     },
     
@@ -501,8 +525,8 @@ myApp.UI = {
         document.querySelector('.js-search').addEventListener('keyup', function(e) {
             if (e.keyCode === 13) {
                 myApp.queryParams.q = this.value;
-                // myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
-                myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
+                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
+                // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
             }
         });
 
@@ -513,10 +537,3 @@ myApp.start = function() {
     myApp.UI.eventsListener()
 }
 myApp.start();
-
-// var url = `https://api.edamam.com/search?`;
-// var url = '../localDatas/recipes.json';
-
-//TODO
-/*
-*/
