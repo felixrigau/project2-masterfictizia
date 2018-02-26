@@ -189,7 +189,7 @@ myApp.recipe = {
             if (json[0] && json[0].uri) {
                 var recipe = json[0];
                 var recipeData = myApp.tools.getRightUriAndId(recipe.uri)
-                recipe.uri = recipeData.uri;
+                
                 recipe.id = recipeData.id;
                 recipe.totalNutrients = {}; //Fix insertion in firebase DB
                 if(properties.action === 'favorite') {
@@ -275,8 +275,8 @@ myApp.recipe = {
             var userId = myApp.sessionStorage.getUser();
             if (userId) {
                 var actionsContainerTag = event.path[2],
-                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
-                    recipeId = recipeData.id,
+                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipe-uri')),
+                    recipeId = actionsContainerTag.getAttribute('data-recipe-id'),
                     spanTag = event.target.parentNode;
                 
                 myApp.tools.cleanQueryParams();        
@@ -316,7 +316,7 @@ myApp.recipe = {
         */
         viewAction:function(event) {
             var actionsContainerTag = event.path[2],
-                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipeid')),
+                    recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipe-uri')),
                     recipeId = recipeData.id;
                     myApp.queryParams.r = recipeData.uri;
 
@@ -423,7 +423,7 @@ myApp.UI = {
                     </p>
                 </div>
                 <div class="recipe-card__actions-wrapper">
-                    <div class="recipe-card__actions" data-recipeid="${recipe.uri}">
+                    <div class="recipe-card__actions" data-recipe-id="${recipeData.id}" data-recipe-uri="${recipe.uri}">
                         <a href="${recipe.url}" target="_blank">
                             <i class="fas fa-link"></i>
                         </a>
@@ -545,5 +545,7 @@ myApp.start();
 
 /*TODO*/
 /*
-Cambiar id en el codigo html de la receta
+Componente de notificación
+Scroll con animación
+Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
 */
