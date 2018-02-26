@@ -96,11 +96,14 @@ myApp.tools = {
     * @param {array} favoriteRecipes - Listado de las recetas favoritas de un usuario determinado.
     * @param {string} recipeId - Id de una receta específica.
     * @description Verifica si una receta está en el listado de recetas favoritas de un usuario.
-    * @return Devuelve un texto que contiene la clase CSS que indica visualmente si una receta favorita del usuario.
+    * @return Devuelve true o false en dependencia si la receta es favorita para el usuario logueado..
     */
     isFavorite: function(favoriteRecipes, recipeId ) {
         if(favoriteRecipes && favoriteRecipes.length !== 0 && favoriteRecipes.indexOf(recipeId) !== -1) {
-            return "class='js-favorite'";
+            return true;
+        }
+        else {
+            return false;
         }
     }
 }
