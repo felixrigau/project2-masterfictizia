@@ -56,5 +56,6 @@ auth.onAuthStateChanged(function(user) {
         myApp.UI.createLogginArea();
         myApp.sessionStorage.removeUser();
         myApp.UI.clearFavoritesContainer();
+        myApp.UI.unmarkAsfavoriteAllRecipes();
     }
 })

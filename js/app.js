@@ -512,6 +512,16 @@ myApp.UI = {
         container.innerHTML = '';
     },
     
+    unmarkAsfavoriteAllRecipes: function () {
+        var container = document.querySelector('.js-recipes-container'); 
+        if (container.hasChildNodes()) {
+            var favoriteRecipes = container.querySelectorAll('.js-favorite');
+            for(var i = 0; i < favoriteRecipes.length; i++) {
+                favoriteRecipes[i].classList.remove('js-favorite');
+            }
+        }
+    },
+    
     addClass:function(tag, cssClass) {
         tag.classList.add(cssClass);
     },
@@ -557,9 +567,10 @@ myApp.start();
 
 /*TODO*/
 /*
+Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
+
 Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
-Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
 Loader gif
 Scroll con animación
 Componente de notificación
