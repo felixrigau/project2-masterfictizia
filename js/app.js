@@ -554,6 +554,11 @@ myApp.UI = {
         }
     },
     
+    showHideLoader: function () {
+        var loader = document.querySelector('.loader-wrapper');
+        loader.classList.toggle('hidden');
+    },
+    
     addClass:function(tag, cssClass) {
         tag.classList.add(cssClass);
     },
