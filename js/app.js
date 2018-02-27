@@ -412,14 +412,14 @@ myApp.UI = {
                     myApp.UI.recipeComponent(recipes[i].recipe, container, myApp.tools.isFavorite(favoriteRecipes, recipeData.id));
                 }
                 myApp.UI.showHideLoader();
-                myApp.UI.moveScrollToRecipes();
+                myApp.UI.moveScroll();
             });
         }
         else {
             for (var i = 0; i < recipes.length; i++) {
                 myApp.UI.recipeComponent(recipes[i].recipe, container);
             }
-            myApp.UI.moveScrollToRecipes();
+            myApp.UI.moveScroll();
             myApp.UI.showHideLoader();
         }
 
@@ -433,7 +433,7 @@ myApp.UI = {
             favoriteRecipes.forEach(function (element) {
                 myApp.UI.recipeComponent(element,container, true);
             });
-            myApp.UI.moveScrollToRecipes();
+            myApp.UI.moveScroll();
         });
     },
     
@@ -527,9 +527,30 @@ myApp.UI = {
             myApp.UI.showFavoriteRecipes();
         });
     },
-    
-    moveScrollToRecipes: function () {
-        window.scrollTo(0, myApp.UI.getRecipeContainerPosition());
+
+    moveScroll: function (speed = 50, destination = myApp.UI.getRecipeContainerPosition()) {
+        var origin = window.scrollY,
+            distance = Math.abs(origin - destination),
+            step = Math.round(distance*speed/1000),
+            destinationStep,
+            counter = 0;
+        
+        var interval = window.setInterval(function () {
+            if(counter <= distance) {
+                
+                if(origin > destination) {
+                    destinationStep = window.scrollY - step;
+                } 
+                else {
+                    destinationStep = window.scrollY + step;
+                }
+                window.scrollTo(0, destinationStep);
+                counter+=step;
+            }
+            else {
+                clearInterval(interval);
+            }
+        }, speed)
     },
     
     getRecipeContainerPosition: function (argument) {
@@ -613,8 +634,8 @@ myApp.start();
 Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
 Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
-
 Loader gif
+
 Scroll con animación
 Componente de notificación
 Validar barra de búsqueda y borrar el texto una vez realizada la busqueda.

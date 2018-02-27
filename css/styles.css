@@ -72,7 +72,7 @@ img.authentication-area__avatar {
   min-width: 1200px;
   margin-right: auto;
   margin-left: auto;
-  padding: 0 1rem; }
+  padding: 0 1rem 40px 1rem; }
 
 .recipes-container {
   display: flex;
