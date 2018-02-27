@@ -200,6 +200,7 @@ myApp.recipe = {
                     recipe.favoriteCounter = 0;
                 }
                 myApp.recipe.management.saveRecipe(recipe, false);
+                myApp.UI.showHideLoader();
             }
             else {
                 console.log('La receta no existe.');
@@ -314,6 +315,7 @@ myApp.recipe = {
                             }
                         }
                         else {
+                            myApp.UI.showHideLoader();
                             myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.recipe.management.saveRecipeFromAPI,{action:'favorite'});
                             myApp.recipe.ui.markAsfavorite(parameters);
                         }
@@ -409,6 +411,7 @@ myApp.UI = {
                     recipeData = myApp.tools.getRightUriAndId(recipes[i].recipe.uri);
                     myApp.UI.recipeComponent(recipes[i].recipe, container, myApp.tools.isFavorite(favoriteRecipes, recipeData.id));
                 }
+                myApp.UI.showHideLoader();
                 myApp.UI.moveScrollToRecipes();
             });
         }
@@ -417,6 +420,7 @@ myApp.UI = {
                 myApp.UI.recipeComponent(recipes[i].recipe, container);
             }
             myApp.UI.moveScrollToRecipes();
+            myApp.UI.showHideLoader();
         }
 
     },
@@ -582,11 +586,16 @@ myApp.UI = {
 
         document.querySelector('.js-search').addEventListener('keyup', function(e) {
             if (e.keyCode === 13) {
-                myApp.queryParams.q = this.value;
-                myApp.queryParams.from = 0;
-                myApp.queryParams.to = 30;
-                myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
-                // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
+                if (this.value) {
+                    myApp.queryParams.q = this.value;
+                    myApp.queryParams.from = 0;
+                    myApp.queryParams.to = 30;
+                    myApp.UI.showHideLoader();
+                    myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
+                    // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
+                } else {
+                    console.log('Debe introducir un valor.')                    
+                }
             }
         });
 
