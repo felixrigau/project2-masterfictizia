@@ -592,15 +592,15 @@ myApp.UI = {
         
         window.setTimeout(function () {
             notifications.childNodes[0].classList.add('notification--in');
-        },500);
+        },500, notifications);
         
         window.setTimeout(function () {
             notifications.childNodes[0].classList.add('notification--out');
-        }, time);
+        }, time, notifications);
         
         window.setTimeout(function () {
             notifications.innerHTML = '';
-        }, time +500)
+        }, time +500, notifications)
     },
     
     addClass:function(tag, cssClass) {
@@ -634,7 +634,7 @@ myApp.UI = {
                     myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
                     // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
                 } else {
-                    console.log('Debe introducir un valor.')                    
+                    myApp.UI.triggerNotification('info','Debe introducir el nombre de un ingrediente para realizar la búsqueda',3000);                  
                 }
             }
         });
@@ -655,8 +655,8 @@ Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
 Loader gif
 Scroll con animación
-
 Componente de notificación
+
 Validar barra de búsqueda y borrar el texto una vez realizada la busqueda.
 Informar cdo no se han encontrado recetas con la búsqueda
 Informar cdo el usuario quiere marcar como favorito pero no está logueado
