@@ -267,6 +267,21 @@ myApp.recipe = {
     
     ui: {
         /** @function
+        * @name recipeActions
+        * @param {Object} event - Evento que es lanzado en la acción de marcar/desmarcar una receta como favorita.
+        * @description Se encarga de la delegación de eventos para las acciones del usuario en una receta.
+        */
+        recipeActions:function (e) {
+            if (e.target.nodeName === 'I' && e.target.parentNode.hasAttribute('data-action')) {
+                if(e.target.parentNode.getAttribute('data-action') === 'view') {
+                    myApp.recipe.ui.viewAction(e);
+                } 
+                else {
+                    myApp.recipe.ui.favoriteAction(e);
+                }
+            }
+        },
+        /** @function
         * @name favoriteAction
         * @param {Object} event - Evento que es lanzado en la acción de marcar/desmarcar una receta como favorita.
         * @description Engloba toda la lógica y el comportamiento relacionado con marcar o desmarcar una receta como favorita.
@@ -439,6 +454,10 @@ myApp.UI = {
             </div>`;
     },
     
+    /** @function
+    * @name createLogginArea
+    * @description Crea el area que contiene los botones del login social y el comportamiento de estos.
+    */
     createLogginArea: function () {
         var authArea = document.querySelector('.authentication-area');
         authArea.innerHTML = '';  
@@ -461,6 +480,10 @@ myApp.UI = {
         });
     },
     
+    /** @function
+    * @name createUserArea
+    * @description Crea el area del usuario cuando está logueado y el comportamiento de estos.
+    */
     createUserArea: function (user) {
         var authArea = document.querySelector('.authentication-area');
         authArea.innerHTML = ''; 
@@ -536,14 +559,11 @@ myApp.UI = {
 
     eventsListener: function() {
         document.querySelector('.js-recipes-container').addEventListener('click', function(e) {
-            if (e.target.nodeName === 'I' && e.target.parentNode.hasAttribute('data-action')) {
-                if(e.target.parentNode.getAttribute('data-action') === 'view') {
-                    myApp.recipe.ui.viewAction(e);
-                } 
-                else {
-                    myApp.recipe.ui.favoriteAction(e);
-                }
-            }
+            myApp.recipe.ui.recipeActions(e);
+        });
+        
+        document.querySelector('.js-favorites-container').addEventListener('click', function(e) {
+            myApp.recipe.ui.recipeActions(e);
         });
 
         document.querySelector('.js-search').addEventListener('keyup', function(e) {
@@ -568,8 +588,8 @@ myApp.start();
 /*TODO*/
 /*
 Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
-
 Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
+
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
 Loader gif
 Scroll con animación
