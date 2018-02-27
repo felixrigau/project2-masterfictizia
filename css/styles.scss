@@ -180,6 +180,60 @@ footer {
     width: 100px;
 }
 
+.notification-wrapper {
+    width: 400px;
+    height: 100px;
+    position: fixed;
+    z-index: 5;
+    top: 115px;
+    right: 15px;
+    overflow-x: hidden;
+}
+
+.notification {
+    padding: 15px;
+    background-color: $soft-grey;
+    border-left: 5px solid;
+    color: $dark-grey;
+    font-family: Lato;
+    font-size: 14px;
+    line-height: 16px;
+    position: relative;
+    transition: all 0.5s;
+    opacity: 0;
+    right: -400px;
+    
+    p {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.notification--success {
+    background-color: #c5e1a5;
+    color: #33691e;
+}
+
+.notification--error {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+}
+
+.notification--info {
+    background-color: #ffe082;
+    color: $dark-grey;
+    border-left:5px solid #ffa000;
+}
+
+.notification--in {
+    opacity: 1;
+    right: 0;
+}
+
+.notification--out {
+    opacity: 0;
+}
+
 .hidden {
     display: none;
 }

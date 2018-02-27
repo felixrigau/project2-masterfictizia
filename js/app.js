@@ -584,6 +584,25 @@ myApp.UI = {
         loader.classList.toggle('hidden');
     },
     
+    triggerNotification:function (type, text, time) {
+        var notifications = document.querySelector('.notification-wrapper');
+        notifications.innerHTML = `<div class="notification notification--${type}">
+            <p>${text}</p>
+        </div>`;
+        
+        window.setTimeout(function () {
+            notifications.childNodes[0].classList.add('notification--in');
+        },500);
+        
+        window.setTimeout(function () {
+            notifications.childNodes[0].classList.add('notification--out');
+        }, time);
+        
+        window.setTimeout(function () {
+            notifications.innerHTML = '';
+        }, time +500)
+    },
+    
     addClass:function(tag, cssClass) {
         tag.classList.add(cssClass);
     },
@@ -635,8 +654,8 @@ Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de f
 Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
 Loader gif
-
 Scroll con animación
+
 Componente de notificación
 Validar barra de búsqueda y borrar el texto una vez realizada la busqueda.
 Informar cdo no se han encontrado recetas con la búsqueda
