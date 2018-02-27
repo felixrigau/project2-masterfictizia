@@ -290,9 +290,11 @@ myApp.recipe = {
             var userId = myApp.sessionStorage.getUser();
             if (userId) {
                 var actionsContainerTag = event.path[2],
+                    container = event.currentTarget,
                     recipeData = myApp.tools.getRightUriAndId(actionsContainerTag.getAttribute('data-recipe-uri')),
                     recipeId = actionsContainerTag.getAttribute('data-recipe-id'),
                     spanTag = event.target.parentNode;
+                    
                 
                 myApp.tools.cleanQueryParams();        
                 myApp.queryParams.r = recipeData.uri;
@@ -306,6 +308,9 @@ myApp.recipe = {
                             }
                             else {
                                 myApp.recipe.ui.unmarkAsfavorite(parameters);
+                                if(container.classList.contains('js-favorites-container')) {
+                                    myApp.UI.showFavoriteRecipes();
+                                }
                             }
                         }
                         else {
@@ -416,6 +421,18 @@ myApp.UI = {
 
     },
     
+    showFavoriteRecipes:function () {
+        var container = document.querySelector('.js-favorites-container');
+        myApp.UI.clearRecipesContainer();
+        myApp.UI.clearFavoritesContainer();
+        myApp.userManagement.favoriteRecipesByUser(myApp.sessionStorage.getUser()).then(function (favoriteRecipes) {
+            favoriteRecipes.forEach(function (element) {
+                myApp.UI.recipeComponent(element,container, true);
+            });
+            myApp.UI.moveScrollToRecipes();
+        });
+    },
+    
     /** @function
     * @name recipeComponent
     * @param {Object} recipe - Receta que será creada.
@@ -503,15 +520,7 @@ myApp.UI = {
         });
         
         document.querySelector('.js-favorites-list-btn').addEventListener('click', function(e) {
-            var container = document.querySelector('.js-favorites-container');
-            myApp.UI.clearRecipesContainer();
-            myApp.UI.clearFavoritesContainer();
-            myApp.userManagement.favoriteRecipesByUser(myApp.sessionStorage.getUser()).then(function (favoriteRecipes) {
-                favoriteRecipes.forEach(function (element) {
-                    myApp.UI.recipeComponent(element,container, true);
-                });
-                myApp.UI.moveScrollToRecipes();
-            });
+            myApp.UI.showFavoriteRecipes();
         });
     },
     
