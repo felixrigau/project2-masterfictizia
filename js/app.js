@@ -598,8 +598,8 @@ myApp.start();
 /*
 Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
 Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
-
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
+
 Loader gif
 Scroll con animación
 Componente de notificación
@@ -609,4 +609,5 @@ Informar cdo el usuario quiere marcar como favorito pero no está logueado
 Borrar console.log
 Mostrar ingredientes de la receta
 Mostrar cantidad de veces que la receta es marcada como favorita
+Si ya hay una busqueda realizada y el usuario se loguea, marcar las recetas favoritas del usuario
 */
