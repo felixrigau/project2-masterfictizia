@@ -327,7 +327,7 @@ myApp.recipe = {
                 );
             }
             else {
-                console.log('Debe loguearse para realizar esta operación');
+                myApp.UI.triggerNotification('info','Registrate para poder seleccionar tus recetas favoritas y mucho más...',3000);
             }
         },
         
@@ -385,7 +385,7 @@ myApp.recipe = {
         },
         
         showRecipe:function(recipe) {
-            console.log("Veo la receta",recipe);
+            myApp.UI.triggerNotification('success','Coming soooon! :p', 3000)
         }
     }
 }
@@ -402,25 +402,32 @@ myApp.UI = {
             container = document.querySelector('.js-recipes-container'),
             recipe = null,
             recipeData = null;
-        
-        myApp.UI.clearFavoritesContainer();
-        myApp.UI.clearRecipesContainer();
-        if(myApp.sessionStorage.getUser()) {
-            myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
-                for (var i = 0; i < recipes.length; i++) {
-                    recipeData = myApp.tools.getRightUriAndId(recipes[i].recipe.uri);
-                    myApp.UI.recipeComponent(recipes[i].recipe, container, myApp.tools.isFavorite(favoriteRecipes, recipeData.id));
-                }
-                myApp.UI.showHideLoader();
-                myApp.UI.moveScroll();
-            });
-        }
-        else {
-            for (var i = 0; i < recipes.length; i++) {
-                myApp.UI.recipeComponent(recipes[i].recipe, container);
+            
+        if (recipes.length > 0) {
+            myApp.UI.clearFavoritesContainer();
+            myApp.UI.clearRecipesContainer();
+            
+            if(myApp.sessionStorage.getUser()) {
+                myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
+                    for (var i = 0; i < recipes.length; i++) {
+                        recipeData = myApp.tools.getRightUriAndId(recipes[i].recipe.uri);
+                        myApp.UI.recipeComponent(recipes[i].recipe, container, myApp.tools.isFavorite(favoriteRecipes, recipeData.id));
+                    }
+                    myApp.UI.showHideLoader();
+                    myApp.UI.moveScroll();
+                });
             }
-            myApp.UI.moveScroll();
+            else {
+                for (var i = 0; i < recipes.length; i++) {
+                    myApp.UI.recipeComponent(recipes[i].recipe, container);
+                }
+                myApp.UI.moveScroll();
+                myApp.UI.showHideLoader();
+            }
+        } 
+        else {
             myApp.UI.showHideLoader();
+            myApp.UI.triggerNotification('info','Eeeh! No existen recetas que contengan ese ingrediente.',3000);                  
         }
 
     },
@@ -633,8 +640,9 @@ myApp.UI = {
                     myApp.UI.showHideLoader();
                     myApp.tools.makeAjaxRequest('GET', myApp.tools.createUrl(myApp.queryParams), myApp.UI.showRecipes);
                     // myApp.tools.makeAjaxRequest('GET', '../localDatas/recipes.json', myApp.UI.showRecipes);
+                    this.value = '';
                 } else {
-                    myApp.UI.triggerNotification('info','Debe introducir el nombre de un ingrediente para realizar la búsqueda',3000);                  
+                    myApp.UI.triggerNotification('info','Introduce el nombre de un ingrediente (en inglés) para realizar la búsqueda',3000);                  
                 }
             }
         });

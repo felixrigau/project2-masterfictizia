@@ -15,6 +15,7 @@ myApp.security = {
     loginGithub: function() {
         firebase.auth().signInWithPopup(gitHubProvider).then(function(result) {
             myApp.userManagement.saveUser(result.user);
+            myApp.UI.triggerNotification('success','Bienvenid@! a Recipes Planner',3000);
         }).catch(function(error) {
             console.log(error)
         });
@@ -27,8 +28,9 @@ myApp.security = {
     loginGoogle: function() {
         firebase.auth().signInWithPopup(googleProvider).then(function(result) {
             myApp.userManagement.saveUser(result.user);
+            myApp.UI.triggerNotification('success','Bienvenid@! a Recipes Planner',3000);
         }).catch(function(error) {
-            console.log(error)
+            myApp.UI.triggerNotification('error',error,3000);
         });
     },
     
@@ -38,9 +40,9 @@ myApp.security = {
     */
     logoutUser: function() {
         firebase.auth().signOut().then(function() {
-            console.log("User logout!")
+            myApp.UI.triggerNotification('success','Hasta pronto!',3000);
         }).catch(function(error) {
-            console.log(error)
+            myApp.UI.triggerNotification('error',error,3000);
         });
     }
 }
