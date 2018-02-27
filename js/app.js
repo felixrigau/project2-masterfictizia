@@ -381,7 +381,8 @@ myApp.UI = {
             recipe = null,
             recipeData = null;
         
-        container.innerHTML = '';
+        myApp.UI.clearFavoritesContainer();
+        myApp.UI.clearRecipesContainer();
         if(myApp.sessionStorage.getUser()) {
             myApp.userManagement.favoriteRecipesIdByUser(myApp.sessionStorage.getUser()).then(function(favoriteRecipes) {
                 for (var i = 0; i < recipes.length; i++) {
@@ -466,7 +467,7 @@ myApp.UI = {
         authArea.innerHTML = 
             `<div class="authentication-area__user">
                 <img class="authentication-area__avatar" src="${user.photoURL}"></img>
-                <div class="js-favorites-list authentication-area__btn"  title="Lista tus recetas favoritas">
+                <div class="js-favorites-list-btn authentication-area__btn"  title="Lista tus recetas favoritas">
                     <span><i class="fas fa-heart"></i></span><span>Tus recetas</span>
                 </div>
                 <div class="js-logout logout-button authentication-area__btn">
@@ -478,9 +479,10 @@ myApp.UI = {
             myApp.security.logoutUser();
         });
         
-        document.querySelector('.js-favorites-list').addEventListener('click', function(e) {
-            var container = document.querySelector('.js-recipes-container');
-            container.innerHTML = '';
+        document.querySelector('.js-favorites-list-btn').addEventListener('click', function(e) {
+            var container = document.querySelector('.js-favorites-container');
+            myApp.UI.clearRecipesContainer();
+            myApp.UI.clearFavoritesContainer();
             myApp.userManagement.favoriteRecipesByUser(myApp.sessionStorage.getUser()).then(function (favoriteRecipes) {
                 favoriteRecipes.forEach(function (element) {
                     myApp.UI.recipeComponent(element,container, true);
@@ -498,6 +500,16 @@ myApp.UI = {
         var scroll = document.querySelector('.search').scrollHeight;
         var headerHeight = document.querySelector('header').offsetHeight;
         return scroll-headerHeight;
+    },
+    
+    clearRecipesContainer: function () {
+        var container = document.querySelector('.js-recipes-container'); 
+        container.innerHTML = '';
+    },
+    
+    clearFavoritesContainer: function () {
+        var container = document.querySelector('.js-favorites-container'); 
+        container.innerHTML = '';
     },
     
     addClass:function(tag, cssClass) {
@@ -545,7 +557,16 @@ myApp.start();
 
 /*TODO*/
 /*
-Componente de notificación
-Scroll con animación
+Cuando el usuario se desloguea, quitar el favorito a todas sus recetas
 Actualizar listado de favoritos cuando el usuario desmarca como favorito uno de sus favoritos
+Cuando el usuario ha listado sus favoritas, y se desloguea, borrar la lista de favoritos
+Loader gif
+Scroll con animación
+Componente de notificación
+Validar barra de búsqueda y borrar el texto una vez realizada la busqueda.
+Informar cdo no se han encontrado recetas con la búsqueda
+Informar cdo el usuario quiere marcar como favorito pero no está logueado
+Borrar console.log
+Mostrar ingredientes de la receta
+Mostrar cantidad de veces que la receta es marcada como favorita
 */

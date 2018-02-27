@@ -55,5 +55,6 @@ auth.onAuthStateChanged(function(user) {
     } else {
         myApp.UI.createLogginArea();
         myApp.sessionStorage.removeUser();
+        myApp.UI.clearFavoritesContainer();
     }
 })
